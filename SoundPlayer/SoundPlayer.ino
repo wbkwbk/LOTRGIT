@@ -12,11 +12,25 @@
   BSD license, all text above must be included in any redistribution
  ****************************************************/
 
+/*
+Fire LED Animation https://github.com/Electriangle/Fire_Main
+*/
+
+#define WS2812FXLEDANIM 0
+
 // include SPI, MP3 and SD libraries
 #include <SPI.h>
 #include <Adafruit_VS1053.h>
 #include <SD.h>
 #include <SoftwareSerial.h>
+#if WS2812FXLEDANIM == 1
+    #include <WS2812FX.h>
+#else
+    #include "FastLED.h"
+#endif
+
+#define LED_COUNT 15
+#define LED_PIN 22
 
 #define DEBUG 1
 
@@ -81,6 +95,11 @@ Adafruit_VS1053_FilePlayer musicPlayer =
   Adafruit_VS1053_FilePlayer(SHIELD_RESET, SHIELD_CS, SHIELD_DCS, DREQ, CARDCS);
   
 SoftwareSerial serialComm(RXReceivePin, TXSendPin);
+#if WS2812FXLEDANIM == 1
+    WS2812FX ws2812fx = WS2812FX(LED_COUNT, LED_PIN, NEO_GRB + NEO_KHZ800);
+#else
+    CRGB leds[LED_COUNT];
+#endif
 
 
 void setup() {
@@ -100,9 +119,10 @@ void setup() {
   }
 
   // list files
-  //printDirectory(SD.open("/"), 0);
+  printDirectory(SD.open("/"), 0);
   
   // Set volume for left, right channels. lower numbers == louder volume!
+  // accepts values between 0 and 255 for left and right.
   musicPlayer.setVolume(1,1);
 
   // Timer interrupts are not suggested, better to use DREQ interrupt!
@@ -121,18 +141,39 @@ void setup() {
   //Serial.println(F("Playing track 002"));
   //musicPlayer.startPlayingFile("/track002.mp3");
 
+#if WS2812FXLEDANIM == 1
+    ws2812fx.init();
+    ws2812fx.setBrightness(255);
+    ws2812fx.setSpeed(200);
+    ws2812fx.setMode(FX_MODE_CHASE_BLACKOUT_RAINBOW);
+    ws2812fx.start();
+#else
+    FastLED.addLeds<WS2812B, LED_PIN, GRB>(leds, LED_COUNT).setCorrection(TypicalLEDStrip);
+    FastLED.setMaxPowerInVoltsAndMilliamps(5, 1500);    // Set power limit of LED strip to 5V, 1500mA
+    FastLED.clear();                                    // Initialize all LEDs to "OFF"
+#endif
 
 }
 
 void loop() {
   // File is playing in the background
-
+    Serial.println("Playing /YShallNP.mp3");
     musicPlayer.startPlayingFile("/YShallNP.mp3");
     while (musicPlayer.playingMusic) {
+        #if WS2812FXLEDANIM == 1
+            ws2812fx.service();
+        #else
+            Fire(1, 10, 100, 80, false);
+        #endif
         // file is now playing in the 'background' so now's a good time to
         //service ledstripe 
     }
-
+    #if WS2812FXLEDANIM == 1
+        ws2812fx.service();
+    #else
+        Fire(1, 10, 100, 80, false);
+    #endif  
+    
     if(serialComm.available() > 0){
         int command = serialComm.parseInt();
         switch(command){
