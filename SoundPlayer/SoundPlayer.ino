@@ -60,17 +60,22 @@ int BALLORCLOSEDSTATUSARRAYPOS = 4;
 int LEFTORBITLOWSTATUSARRAYPOS = 5;
 
 boolean balrogopen = false;
+volatile int consecutiveBalrogHigh = 0;
+volatile boolean balorghit = false;
 
 //timer function
 // Define the interval (in milliseconds)
-const unsigned long interval = 5000;  // 5 seconds
+const unsigned long InterruptIntervall1 = 5000;  // 5 seconds
+const unsigned long InterruptIntervall2 = 2;  // 5 seconds
 
 // Variable to store the last time the routine was called
-unsigned long previousMillis = 0;
-
+unsigned long previousMillisI1 = 0;
+unsigned long previousMillisI2 = 0;
 
 #define RXReceivePin 8
 #define TXSendPin 9
+
+//SoundShield
 // define the pins used
 #define CLK 13       // SPI Clock, shared with SD card
 #define MISO 12      // Input data, from VS1053/SD card
@@ -166,7 +171,9 @@ void loop() {
     unsigned long currentMillis = millis();
   // File is playing in the background
     Serial.println("Playing /YShallNP.mp3");
-    musicPlayer.startPlayingFile("/YShallNP.mp3");
+    if(!musicPlayer.playingMusic){
+        musicPlayer.startPlayingFile("/YShallNP.mp3");
+    }
     //while (musicPlayer.playingMusic) {
     //    
     //}
@@ -182,13 +189,21 @@ void loop() {
     #endif  
 
 
-  // Check if 5 seconds have passed
-    if (currentMillis - previousMillis >= interval) {
+    // Check if intervall1 has passed
+    if (currentMillis - previousMillisI1 >= InterruptIntervall1) {
     // Save the current time as the last time the routine was called
-        previousMillis = currentMillis;
+        previousMillisI1 = currentMillis;
     // Call the routine
-        timedInterruptRoutine();
-  }
+        timedInterruptRoutine1();
+    }
+
+    // Check if intervall2 has passed
+    if (currentMillis - previousMillisI2 >= InterruptIntervall2) {
+    // Save the current time as the last time the routine was called
+        previousMillisI2 = currentMillis;
+    // Call the routine
+        timedInterruptRoutine2();
+    }
 
     if(serialComm.available() > 0){
         int command = serialComm.parseInt();
@@ -274,8 +289,18 @@ void loop() {
 */
 }
 
-void timedInterruptRoutine() {
+void timedInterruptRoutine1() {
   balrogopen = !balrogopen;
+}
+
+void timedInterruptRoutine2() {
+    consecutiveBalrogHigh++;
+    //Serial.println("Balrog High");
+    if(consecutiveBalrogHigh > 5){
+        balorghit = true;
+    }else{
+    consecutiveBalrogHigh = 0;  
+  }  
 }
 
 boolean checkDebounceTimePassed(int currentSwitch, unsigned long currentTime){
