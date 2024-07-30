@@ -59,7 +59,14 @@ int BALLORGOPENSTATUSARRAYPOS = 3;
 int BALLORCLOSEDSTATUSARRAYPOS = 4;
 int LEFTORBITLOWSTATUSARRAYPOS = 5;
 
+boolean balrogopen = false;
 
+//timer function
+// Define the interval (in milliseconds)
+const unsigned long interval = 5000;  // 5 seconds
+
+// Variable to store the last time the routine was called
+unsigned long previousMillis = 0;
 
 
 #define RXReceivePin 8
@@ -156,24 +163,33 @@ void setup() {
 }
 
 void loop() {
+    unsigned long currentMillis = millis();
   // File is playing in the background
     Serial.println("Playing /YShallNP.mp3");
     musicPlayer.startPlayingFile("/YShallNP.mp3");
-    while (musicPlayer.playingMusic) {
-        #if WS2812FXLEDANIM == 1
-            ws2812fx.service();
-        #else
-            Fire(1, 10, 100, 80, false);
-        #endif
-        // file is now playing in the 'background' so now's a good time to
-        //service ledstripe 
-    }
+    //while (musicPlayer.playingMusic) {
+    //    
+    //}
     #if WS2812FXLEDANIM == 1
         ws2812fx.service();
     #else
+    if(balrogopen){
         Fire(1, 10, 100, 80, false);
+    }else{
+        FastLED.clear();
+        FastLED.show();
+    }
     #endif  
-    
+
+
+  // Check if 5 seconds have passed
+    if (currentMillis - previousMillis >= interval) {
+    // Save the current time as the last time the routine was called
+        previousMillis = currentMillis;
+    // Call the routine
+        timedInterruptRoutine();
+  }
+
     if(serialComm.available() > 0){
         int command = serialComm.parseInt();
         switch(command){
@@ -256,6 +272,10 @@ void loop() {
 
   //delay(100);
 */
+}
+
+void timedInterruptRoutine() {
+  balrogopen = !balrogopen;
 }
 
 boolean checkDebounceTimePassed(int currentSwitch, unsigned long currentTime){
