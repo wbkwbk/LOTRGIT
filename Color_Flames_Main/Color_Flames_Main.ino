@@ -17,7 +17,7 @@
 
 #include "FastLED.h"
 
-#define NUM_LEDS  72    // Enter the total number of LEDs on the strip
+#define NUM_LEDS  20    // Enter the total number of LEDs on the strip
 #define PIN       22      // The pin connected to DATA line to control the LEDs
 
 CRGB leds[NUM_LEDS];
@@ -30,5 +30,5 @@ void setup() {
 
 void loop() {
   // A white flame. Change parameters according to description in "Color_Flames_Animation" tab.
-  Fire(1, 50, 100, 10, false);
+  Fire(1, 10, 10, 120, false);
 }
