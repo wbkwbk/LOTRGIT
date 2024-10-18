@@ -11,12 +11,12 @@ int LeftOrbitLowP5 = A13;
 volatile boolean LeftOrbitLow = false;
 int balrogOpenP2 = A11; 
 volatile boolean balrogOpen = false;
-volatile boolean balrogOpenReported = false;
 int balrogClosedP1 = A12; 
 volatile boolean balrogClosed = false;
-volatile boolean balrogClosedReported = false;
 volatile int consecutiveBalrogHigh = 0;
 int analogReadSwitchClosed = 300;
+boolean balrogclosedReported = false;
+
 
 
 
@@ -44,7 +44,7 @@ void loop() {
   }
   if(leftRampMade){
     Serial.println("Left Ramp Made");
-    leftRampMade = false;
+    balrogclosedReported=false;
   }
   if(RightRampEnter){
     Serial.println("Right Ramp Enter");
@@ -54,16 +54,15 @@ void loop() {
     Serial.println("Left Orbit Low");
     LeftOrbitLow = false;
   }
-  if(balrogOpen && !balrogOpenReported){
-    Serial.println("BalrogOpen");
-    balrogOpen = false;
-    balrogOpenReported = true;
-  }
 
-  if(balrogClosed && !balrogClosedReported){
-    Serial.println("BalrogClosed");
-    balrogClosed = false;
-    balrogClosedReported = true;
+  //Balrog is blocking center Ramp
+  if(balrogClosed && !leftRampMade){
+    Serial.println("BalrogClosed");  
+  }
+  //balrog open: Balrog is in not-active position not blocking center ramp
+  if(balrogOpen && balrogclosedReported && !leftRampMade){
+    Serial.println("BalrogOpen"); 
+    balrogclosedReported = false; 
   }
 }
 
@@ -72,7 +71,7 @@ void loop() {
 void P5_InterruptRoutine(){
 
   int BalrogHitStatus = analogRead(BalrogHitP6);
-  if(BalrogHitStatus == HIGH){
+  if(BalrogHitStatus > analogReadSwitchClosed){
     consecutiveBalrogHigh++;
     //debounce
     if(consecutiveBalrogHigh > 20){
@@ -80,29 +79,30 @@ void P5_InterruptRoutine(){
     }  
   }else{
     consecutiveBalrogHigh = 0;  
+    balrogHit = false;
   }
 
   int RightRampEnterStatus = analogRead(RightRampEnterP9);
   if(RightRampEnterStatus < analogReadSwitchClosed){
     RightRampEnter = true;  
+  }else{
+    RightRampEnter = false; 
   }
 
   int balrogOpenStatus = analogRead(balrogOpenP2);
   if(balrogOpenStatus < analogReadSwitchClosed){
-    balrogOpen = true;  
-    balrogClosedReported = false;
+    balrogOpen = true; 
   }else{
-    balrogOpen = false;
+      balrogOpen = false;
   }
 
   int balrogClosedStatus = analogRead(balrogClosedP1);
   if(balrogClosedStatus < analogReadSwitchClosed){
     balrogClosed = true; 
-    balrogOpenReported = false; 
+    balrogclosedReported = true;
   }else{
     balrogClosed = false;
   }
-
 
 }
 
@@ -110,11 +110,17 @@ void P6_InterruptRoutine(){
   int LeftRampMadeStatus = analogRead(LeftRampMadeP1);
   if(LeftRampMadeStatus < analogReadSwitchClosed){
       leftRampMade = true;
+      balrogclosedReported=false;
+  }else{
+      leftRampMade = false;
   } 
 
   int LeftOrbitLowStatus = analogRead(LeftOrbitLowP5);
   if(LeftOrbitLowStatus < analogReadSwitchClosed){
     LeftOrbitLow = true;
+  }
+  else{
+    LeftOrbitLow = false;  
   }
 }
 
