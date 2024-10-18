@@ -116,6 +116,7 @@ void loop() {
     Serial.println("Left Ramp Made");
     balrogclosedReported=false;
     if(balrogClosed){
+        Serial.println("Playing YShallNP.mp3");
         if(!musicPlayer.playingMusic){
           musicPlayer.startPlayingFile("/YShallNP.mp3");
         }
