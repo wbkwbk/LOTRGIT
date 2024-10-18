@@ -1,21 +1,22 @@
 
 int MatrixColumnP5Pin = 20;
 int MatrixColumnP6Pin = 21;
-int BalrogHitP6 = 22;  
+int BalrogHitP6 = A8;  
 volatile boolean balrogHit = false;
-int LeftRampMadeP1 = 24; 
+int LeftRampMadeP1 = A9; 
 volatile boolean leftRampMade = false;
-int RightRampEnterP9 = 26;
+int RightRampEnterP9 = A10;
 volatile boolean RightRampEnter = false;
-int LeftOrbitLowP5 = 32; 
+int LeftOrbitLowP5 = A13; 
 volatile boolean LeftOrbitLow = false;
-int balrogOpenP2 = 28; 
+int balrogOpenP2 = A11; 
 volatile boolean balrogOpen = false;
 volatile boolean balrogOpenReported = false;
-int balrogClosedP1 = 30; 
+int balrogClosedP1 = A12; 
 volatile boolean balrogClosed = false;
 volatile boolean balrogClosedReported = false;
 volatile int consecutiveBalrogHigh = 0;
+int analogReadSwitchClosed = 300;
 
 
 
@@ -70,7 +71,7 @@ void loop() {
 // Interrupt Routine. Wird aufgerufen bei fallender Flanke an MatrixColumnP5Pin. Setzt Variable BalrogHit auf true, wenn BalrogHitPinP6 HIGH.
 void P5_InterruptRoutine(){
 
-  int BalrogHitStatus = digitalRead(BalrogHitP6);
+  int BalrogHitStatus = analogRead(BalrogHitP6);
   if(BalrogHitStatus == HIGH){
     consecutiveBalrogHigh++;
     //debounce
@@ -81,21 +82,21 @@ void P5_InterruptRoutine(){
     consecutiveBalrogHigh = 0;  
   }
 
-  int RightRampEnterStatus = digitalRead(RightRampEnterP9);
-  if(RightRampEnterStatus == HIGH){
+  int RightRampEnterStatus = analogRead(RightRampEnterP9);
+  if(RightRampEnterStatus < analogReadSwitchClosed){
     RightRampEnter = true;  
   }
 
-  int balrogOpenStatus = digitalRead(balrogOpenP2);
-  if(balrogOpenStatus == HIGH){
+  int balrogOpenStatus = analogRead(balrogOpenP2);
+  if(balrogOpenStatus < analogReadSwitchClosed){
     balrogOpen = true;  
     balrogClosedReported = false;
   }else{
     balrogOpen = false;
   }
 
-  int balrogClosedStatus = digitalRead(balrogClosedP1);
-  if(balrogClosedStatus == HIGH){
+  int balrogClosedStatus = analogRead(balrogClosedP1);
+  if(balrogClosedStatus < analogReadSwitchClosed){
     balrogClosed = true; 
     balrogOpenReported = false; 
   }else{
@@ -106,13 +107,13 @@ void P5_InterruptRoutine(){
 }
 
 void P6_InterruptRoutine(){
-  int LeftRampMadeStatus = digitalRead(LeftRampMadeP1);
-  if(LeftRampMadeStatus == HIGH){
+  int LeftRampMadeStatus = analogRead(LeftRampMadeP1);
+  if(LeftRampMadeStatus < analogReadSwitchClosed){
       leftRampMade = true;
   } 
 
-  int LeftOrbitLowStatus = digitalRead(LeftOrbitLowP5);
-  if(LeftOrbitLowStatus == HIGH){
+  int LeftOrbitLowStatus = analogRead(LeftOrbitLowP5);
+  if(LeftOrbitLowStatus < analogReadSwitchClosed){
     LeftOrbitLow = true;
   }
 }
