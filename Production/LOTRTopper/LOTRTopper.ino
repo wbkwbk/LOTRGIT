@@ -60,7 +60,9 @@ volatile int consecutiveBalrogHigh = 0;
 int analogReadSwitchClosed = 300;
 boolean balrogclosedReported = false;
 
-WS2812Wrapper mainLEDStripe(5,10, NEO_GRBW + NEO_KHZ800);
+//                          num_led, pin, neoPixelType, animduration
+WS2812Wrapper mainLEDStripe(5,10, NEO_GRBW + NEO_KHZ800, 5000);
+
 
 
 // Arduino initialisieren
@@ -121,6 +123,8 @@ void loop() {
         if(!musicPlayer.playingMusic){
           musicPlayer.startPlayingFile("/YShallNP.mp3");
         }
+    }else{
+      mainLEDStripe.startAnim();
     }
   }
   if(RightRampEnter){
@@ -143,6 +147,9 @@ void loop() {
     Serial.println("BalrogOpen"); 
     balrogclosedReported = false; 
   }
+
+  //now check all the ledstripes if a running anim has to stop
+  mainLEDStripe.check();
 }
 
 
