@@ -10,6 +10,7 @@
 #include <SPI.h>
 #include <Adafruit_VS1053.h>
 #include <SD.h>
+#include "WS2812Wrapper.h"
 
 //SoundShield
 // define the pins used
@@ -41,8 +42,8 @@ Adafruit_VS1053_FilePlayer musicPlayer =
   Adafruit_VS1053_FilePlayer(SHIELD_RESET, SHIELD_CS, SHIELD_DCS, DREQ, CARDCS);
 
 //variable declaration
-int MatrixColumnP5Pin = 20;
-int MatrixColumnP6Pin = 21;
+int MatrixColumnP5Pin = 20; //Interrupt 1
+int MatrixColumnP6Pin = 21; //Interrupt 0
 int BalrogHitP6 = A8;  
 volatile boolean balrogHit = false;
 int LeftRampMadeP1 = A9; 
@@ -59,7 +60,7 @@ volatile int consecutiveBalrogHigh = 0;
 int analogReadSwitchClosed = 300;
 boolean balrogclosedReported = false;
 
-
+WS2812Wrapper mainLEDStripe(5,10, NEO_GRBW + NEO_KHZ800);
 
 
 // Arduino initialisieren
