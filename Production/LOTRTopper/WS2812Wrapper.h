@@ -85,6 +85,7 @@ class WS2812Wrapper{
 		WS2812FX ws2812fxInstance;
     long animStarttime;
     long animRunDuration;
+    boolean isAnimrunning = false;
 };
 
 #endif

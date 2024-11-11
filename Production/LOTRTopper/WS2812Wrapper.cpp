@@ -19,12 +19,16 @@
     ws2812fxInstance.setMode(type);
     animStarttime = millis();
     ws2812fxInstance.start();
+    isAnimrunning = true;
   }
 
   void WS2812Wrapper::check(){
-    if(millis() - animStarttime < animRunDuration){
-      ws2812fxInstance.service();  
-    }else{
-      ws2812fxInstance.stop();
+    if(isAnimrunning){
+      if(millis() - animStarttime < animRunDuration){
+        ws2812fxInstance.service();  
+      }else{
+        ws2812fxInstance.stop();
+        isAnimrunning = false;
+      }
     }
   }
