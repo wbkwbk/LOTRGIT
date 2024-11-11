@@ -44,24 +44,24 @@ Adafruit_VS1053_FilePlayer musicPlayer =
 //variable declaration
 int MatrixColumnP5Pin = 20; //Interrupt 1
 int MatrixColumnP6Pin = 21; //Interrupt 0
-int BalrogHitP6 = A8;  
+int BalrogHitP6 = A8;  //Red Cable
 volatile boolean balrogHit = false;
-int LeftRampMadeP1 = A9; 
+int LeftRampMadeP1 = A9; // Orange Cable
 volatile boolean leftRampMade = false; 
-int RightRampEnterP9 = A10;
+int RightRampEnterP9 = A10; // Yellow Cable
 volatile boolean RightRampEnter = false;
-int LeftOrbitLowP5 = A13; 
+int LeftOrbitLowP5 = A13; //Purple cable
 volatile boolean LeftOrbitLow = false;
-int balrogOpenP2 = A11; 
+int balrogOpenP2 = A11; //Green cable
 volatile boolean balrogOpen = false;
-int balrogClosedP1 = A12; 
+int balrogClosedP1 = A12; //Blue cable
 volatile boolean balrogClosed = false;
 volatile int consecutiveBalrogHigh = 0;
 int analogReadSwitchClosed = 300;
 boolean balrogclosedReported = false;
 
-//                          num_led, pin, neoPixelType, animduration
-WS2812Wrapper mainLEDStripe(5,10, NEO_GRBW + NEO_KHZ800, 5000);
+//                          num_led, pin, neoPixelType, animduration, brightness, speed
+WS2812Wrapper mainLEDStripe(5,10, NEO_GRBW + NEO_KHZ800, 5000, 200, 200);
 
 
 
@@ -122,9 +122,12 @@ void loop() {
         Serial.println("Playing YShallNP.mp3");
         if(!musicPlayer.playingMusic){
           musicPlayer.startPlayingFile("/YShallNP.mp3");
+          Serial.println("Start LED ANIM: FX_MODE_RAINBOW_CYCLE ");
+          mainLEDStripe.startAnim(FX_MODE_RAINBOW_CYCLE);
         }
     }else{
-      mainLEDStripe.startAnim();
+      mainLEDStripe.startAnim(FX_MODE_CHASE_FLASH);
+      Serial.println("Start LED ANIM: FX_MODE_CHASE_FLASH ");
     }
   }
   if(RightRampEnter){
