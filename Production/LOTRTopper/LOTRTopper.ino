@@ -61,7 +61,7 @@ int analogReadSwitchClosed = 300;
 boolean balrogclosedReported = false;
 
 //                          num_led, pin, neoPixelType, animduration, brightness, speed
-WS2812Wrapper mainLEDStripe(5,10, NEO_GRBW + NEO_KHZ800, 5000, 200, 200);
+WS2812Wrapper mainLEDStripe(50,22, NEO_GRBW + NEO_KHZ800, 5000, 200, 200);
 
 
 
