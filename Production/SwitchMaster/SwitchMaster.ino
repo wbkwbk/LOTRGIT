@@ -7,6 +7,18 @@
 */
 #include <SoftwareSerial.h>
 
+#define DEBUG 1
+
+#ifdef DEBUG
+#define DEBUG_PRINT(x) Serial.print(x)
+#define DEBUG_PRINTDEC(x) Serial.print(x, DEC)
+#define DEBUG_PRINTLN(x) Serial.println(x)
+#else
+#define DEBUG_PRINT(x)
+#define DEBUG_PRINTDEC(x)
+#define DEBUG_PRINTLN(x)
+#endif
+
 #define RXPIN 0 //connect SwitchstateDedector Receiving D0 to Switch Transmitter D1
 #define TXPIN 6 //connect the SwitchstateDedector Transmitting D6 to the Hardware Receiving D0 of the Swtich Receiver EffectsSlave
 #define TRXBAUDRATE 38400
@@ -17,6 +29,8 @@
 #define BALROGOPEN 4
 #define BALROGCLOSED 5
 #define LEFTORBITLOW 6
+
+#define SWITCHDEBOUNCETIME 1
 
 
 
@@ -64,11 +78,15 @@ void loop() {
   if(balrogHit){
     Serial.println("Balrog Hit");
     balrogHit = false;
+    delay(SWITCHDEBOUNCETIME);
     switchSender.write(BALROGHIT);
+    DEBUG_PRINTLN("SwitchSender::BALROGHIT"); 
   }
   if(leftRampMade){
     balrogclosedReported=false;
+    delay(SWITCHDEBOUNCETIME);
     switchSender.write(LEFTRAMPMADE);
+    DEBUG_PRINTLN("SwitchSender::LEFTRAMPMADE"); 
     //todo move to EffectsSlave
     if(balrogClosed){
         Serial.println("Playing YShallNP.mp3");
@@ -76,23 +94,32 @@ void loop() {
   }
   if(RightRampEnter){
     RightRampEnter = false;
+    delay(SWITCHDEBOUNCETIME);
     switchSender.write(RIGHTRAMPENTER);
+    DEBUG_PRINTLN("SwitchSender::RIGHTRAMPENTER"); 
   }
   if(LeftOrbitLow){
     LeftOrbitLow = false;
+    delay(SWITCHDEBOUNCETIME);
     switchSender.write(LEFTORBITLOW);
+    DEBUG_PRINTLN("SwitchSender::LEFTORBITLOW");
   }
 
   //Balrog is blocking center Ramp
   //!leftRampMade: Hack for reasons not known LeftRampMade triggered wrong balrogclosed
-  if(balrogClosed && !leftRampMade){
+  if(balrogClosed && !leftRampMade && !balrogclosedReported){
+    delay(SWITCHDEBOUNCETIME);
     switchSender.write(BALROGCLOSED);
+    DEBUG_PRINTLN("SwitchSender::BALROGCLOSED"); 
+    balrogclosedReported = true;
   }
   //balrog open: Balrog is in not-active position not blocking center ramp
   //!leftRampMade: Hack for reasons not known LeftRampMade triggered wrong balrogclosed
   if(balrogOpen && balrogclosedReported && !leftRampMade){
     balrogclosedReported = false; 
+    delay(SWITCHDEBOUNCETIME);
     switchSender.write(BALROGOPEN);
+    DEBUG_PRINTLN("SwitchSender::BALROGOPEN"); 
   }
 }
 
@@ -129,7 +156,9 @@ void P5_InterruptRoutine(){
   int balrogClosedStatus = analogRead(balrogClosedP1);
   if(balrogClosedStatus < analogReadSwitchClosed){
     balrogClosed = true; 
-    balrogclosedReported = true;
+    //13.11.24 changed
+    //balrogclosedReported = true;
+    balrogclosedReported = false;
   }else{
     balrogClosed = false;
   }
