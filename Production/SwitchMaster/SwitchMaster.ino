@@ -30,13 +30,13 @@
 #define BALROGCLOSED 5
 #define LEFTORBITLOW 6
 
-#define SWITCHDEBOUNCETIME 1
+#define SWITCHDEBOUNCETIME 0
 
 
 
 //variable declaration
-int MatrixColumnP5Pin = 12;
-int MatrixColumnP6Pin = 13;
+int MatrixColumnP5Pin = 2;
+int MatrixColumnP6Pin = 3;
 int BalrogHitP6 = A0;  
 volatile boolean balrogHit = false;
 int LeftRampMadeP1 = A1; 
@@ -45,13 +45,18 @@ int RightRampEnterP9 = A2;
 volatile boolean RightRampEnter = false;
 int LeftOrbitLowP5 = A5; 
 volatile boolean LeftOrbitLow = false;
-int balrogOpenP2 = A3; 
+int balrogOpenP2_31 = A3; 
 volatile boolean balrogOpen = false;
-int balrogClosedP1 = A4; 
+int balrogClosedP1_32 = A4; 
 volatile boolean balrogClosed = false;
 volatile int consecutiveBalrogHigh = 0;
 int analogReadSwitchClosed = 300;
-boolean balrogclosedReported = false;
+long lasttimeBalrogOpenReported;
+long lasttimeBalrogclosedReported;
+boolean lastBalrogClosedValue;
+boolean lastBalrogOpenvalue;
+#define BALROGCLOSEOPENREPORTINGINTERVALL 1
+
 
 SoftwareSerial switchSender(RXPIN, TXPIN); // RX, TX
 
@@ -65,27 +70,24 @@ void setup() {
   pinMode(LeftRampMadeP1, INPUT);
   pinMode(RightRampEnter, INPUT);
   pinMode(LeftOrbitLowP5, INPUT);
-  pinMode(balrogOpenP2, INPUT);
-  pinMode(balrogClosedP1, INPUT);
+  pinMode(balrogOpenP2_31, INPUT);
+  pinMode(balrogClosedP1_32, INPUT);
   Serial.begin(9600);
   attachInterrupt(digitalPinToInterrupt(MatrixColumnP5Pin), P5_InterruptRoutine, FALLING);
   attachInterrupt(digitalPinToInterrupt(MatrixColumnP6Pin), P6_InterruptRoutine, FALLING);
 }
 
 void loop() {
-
 // Warte auf Balrog Hit
   if(balrogHit){
-    Serial.println("Balrog Hit");
     balrogHit = false;
     delay(SWITCHDEBOUNCETIME);
-    switchSender.write(BALROGHIT);
+    //switchSender.write(BALROGHIT);
     DEBUG_PRINTLN("SwitchSender::BALROGHIT"); 
   }
   if(leftRampMade){
-    balrogclosedReported=false;
     delay(SWITCHDEBOUNCETIME);
-    switchSender.write(LEFTRAMPMADE);
+    //switchSender.write(LEFTRAMPMADE);
     DEBUG_PRINTLN("SwitchSender::LEFTRAMPMADE"); 
     //todo move to EffectsSlave
     if(balrogClosed){
@@ -95,37 +97,75 @@ void loop() {
   if(RightRampEnter){
     RightRampEnter = false;
     delay(SWITCHDEBOUNCETIME);
-    switchSender.write(RIGHTRAMPENTER);
+    //switchSender.write(RIGHTRAMPENTER);
     DEBUG_PRINTLN("SwitchSender::RIGHTRAMPENTER"); 
   }
   if(LeftOrbitLow){
     LeftOrbitLow = false;
     delay(SWITCHDEBOUNCETIME);
-    switchSender.write(LEFTORBITLOW);
+    //switchSender.write(LEFTORBITLOW);
     DEBUG_PRINTLN("SwitchSender::LEFTORBITLOW");
   }
 
   //Balrog is blocking center Ramp
   //!leftRampMade: Hack for reasons not known LeftRampMade triggered wrong balrogclosed
-  if(balrogClosed && !leftRampMade && !balrogclosedReported){
-    delay(SWITCHDEBOUNCETIME);
-    switchSender.write(BALROGCLOSED);
-    DEBUG_PRINTLN("SwitchSender::BALROGCLOSED"); 
-    balrogclosedReported = true;
+  if(balrogClosed){ //&& !leftRampMade){
+    int currenttime = millis();
+//    if(currenttime - lasttimeBalrogclosedReported > BALROGCLOSEOPENREPORTINGINTERVALL){
+      lasttimeBalrogclosedReported = currenttime;
+      if(!lastBalrogClosedValue){
+        //switchSender.write(BALROGCLOSED);
+        DEBUG_PRINTLN("SwitchSender::BALROGCLOSED"); 
+        lastBalrogClosedValue = true;
+      }
+//    }
+  }else{
+    lastBalrogClosedValue = false;
   }
+
   //balrog open: Balrog is in not-active position not blocking center ramp
   //!leftRampMade: Hack for reasons not known LeftRampMade triggered wrong balrogclosed
-  if(balrogOpen && balrogclosedReported && !leftRampMade){
-    balrogclosedReported = false; 
-    delay(SWITCHDEBOUNCETIME);
-    switchSender.write(BALROGOPEN);
-    DEBUG_PRINTLN("SwitchSender::BALROGOPEN"); 
+  if(balrogOpen){ //&& !leftRampMade){
+    int currenttime = millis();
+//    if(currenttime - lasttimeBalrogOpenReported > BALROGCLOSEOPENREPORTINGINTERVALL){
+      lasttimeBalrogOpenReported = currenttime;
+      DEBUG_PRINT("lastBalrogOpenvalue::");
+      DEBUG_PRINTLN(lastBalrogOpenvalue);
+      if(!lastBalrogOpenvalue){
+        //switchSender.write(BALROGOPEN);
+        DEBUG_PRINTLN("SwitchSender::BALROGOPEN");   
+        lastBalrogOpenvalue = true;     
+      }
+//    }
+  }else{
+    lastBalrogOpenvalue = false;    
   }
+
 }
 
 
 // Interrupt Routine. Wird aufgerufen bei fallender Flanke an MatrixColumnP5Pin. Setzt Variable BalrogHit auf true, wenn BalrogHitPinP6 HIGH.
 void P5_InterruptRoutine(){
+
+  int balrogOpenStatus = analogRead(balrogOpenP2_31);
+  int balrogClosedStatus = analogRead(balrogClosedP1_32);
+  //Switchb 31: Balrogopen is open and Switch 32 Balrogclosed is closed then balrog is closed
+  if(balrogOpenStatus > analogReadSwitchClosed){
+    if(balrogClosedStatus < analogReadSwitchClosed){
+      balrogOpen = true;   
+    }else{
+      balrogOpen = false; 
+    }
+  }
+  
+  if(balrogClosedStatus > analogReadSwitchClosed){
+    if(balrogOpenStatus < analogReadSwitchClosed){
+      balrogClosed = true;
+    }else{
+      balrogClosed = false;    
+    }
+  }
+  
 
   int BalrogHitStatus = analogRead(BalrogHitP6);
   if(BalrogHitStatus > analogReadSwitchClosed){
@@ -144,32 +184,13 @@ void P5_InterruptRoutine(){
     RightRampEnter = true;  
   }else{
     RightRampEnter = false; 
-  }
-
-  int balrogOpenStatus = analogRead(balrogOpenP2);
-  if(balrogOpenStatus < analogReadSwitchClosed){
-    balrogOpen = true; 
-  }else{
-    balrogOpen = false;
-  }
-
-  int balrogClosedStatus = analogRead(balrogClosedP1);
-  if(balrogClosedStatus < analogReadSwitchClosed){
-    balrogClosed = true; 
-    //13.11.24 changed
-    //balrogclosedReported = true;
-    balrogclosedReported = false;
-  }else{
-    balrogClosed = false;
-  }
-
+  }  
 }
 
 void P6_InterruptRoutine(){
   int LeftRampMadeStatus = analogRead(LeftRampMadeP1);
   if(LeftRampMadeStatus < analogReadSwitchClosed){
       leftRampMade = true;
-      balrogclosedReported=false;
   }else{
       leftRampMade = false;
   } 
