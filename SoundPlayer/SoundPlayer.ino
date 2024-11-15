@@ -170,7 +170,7 @@ void setup() {
 void loop() {
     unsigned long currentMillis = millis();
   // File is playing in the background
-    Serial.println("Playing /YShallNP.mp3");
+
     if(!musicPlayer.playingMusic){
         musicPlayer.startPlayingFile("/YShallNP.mp3");
     }
