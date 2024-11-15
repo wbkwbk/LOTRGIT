@@ -54,6 +54,11 @@ int analogReadSwitchClosed = 300;
 boolean lastBalrogClosedValue;
 boolean lastBalrogOpenvalue;
 
+// Variable for last stable state and time
+volatile unsigned long lastDebounceTimeBalrogHit = 0;
+volatile unsigned long debounceDelayBalorgHit = 50;  // debounce time in millis
+boolean lastBalrogHitState = false;
+
 
 SoftwareSerial switchSender(RXPIN, TXPIN); // RX, TX
 
@@ -156,24 +161,28 @@ void P5_InterruptRoutine(){
   }
   
 
-  int BalrogHitStatus = analogRead(BalrogHitP6);
-  if(BalrogHitStatus > analogReadSwitchClosed){
-    consecutiveBalrogHigh++;
-    //debounce
-    if(consecutiveBalrogHigh > 40){
-        balrogHit = true;      
-    }  
-  }else{ 
-    balrogHit = false;
-    consecutiveBalrogHigh = 0;
-  }
-
   int RightRampEnterStatus = analogRead(RightRampEnterP9);
   if(RightRampEnterStatus < analogReadSwitchClosed){
     RightRampEnter = true;  
   }else{
     RightRampEnter = false; 
   }  
+
+  int BalrogHitStatus = readStableValue(BalrogHitP6);
+  if(BalrogHitStatus > analogReadSwitchClosed){
+    if (!lastBalrogHitState) {
+      // wait until value is stable
+      if (millis() - lastDebounceTimeBalrogHit > debounceDelayBalorgHit) {
+        balrogHit = true;
+        lastDebounceTimeBalrogHit = millis();  // update last time
+      }
+    }
+    lastBalrogHitState = true;
+  } else {
+    lastBalrogHitState = false;
+    balrogHit = false;  // Reset the Hit-Flag
+  }
+
 }
 
 void P6_InterruptRoutine(){
@@ -191,4 +200,13 @@ void P6_InterruptRoutine(){
   else{
     LeftOrbitLow = false;  
   }
+}
+
+int readStableValue(int pin) {
+  long sum = 0;
+  const int numReadings = 10; // Anzahl der Messungen
+  for (int i = 0; i < numReadings; i++) {
+    sum += analogRead(pin);
+  }
+  return sum / numReadings;
 }
