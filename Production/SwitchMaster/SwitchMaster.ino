@@ -160,8 +160,7 @@ void P5_InterruptRoutine(){
         balrogHit = true;
         consecutiveBalrogHigh = 0;
     }  
-  }else{
-    consecutiveBalrogHigh = 0;  
+  }else{ 
     balrogHit = false;
   }
 
