@@ -158,6 +158,7 @@ void P5_InterruptRoutine(){
     //debounce
     if(consecutiveBalrogHigh > 20){
         balrogHit = true;
+        consecutiveBalrogHigh = 0;
     }  
   }else{
     consecutiveBalrogHigh = 0;  
