@@ -129,8 +129,6 @@ void loop() {
     int currenttime = millis();
 //    if(currenttime - lasttimeBalrogOpenReported > BALROGCLOSEOPENREPORTINGINTERVALL){
       lasttimeBalrogOpenReported = currenttime;
-      DEBUG_PRINT("lastBalrogOpenvalue::");
-      DEBUG_PRINTLN(lastBalrogOpenvalue);
       if(!lastBalrogOpenvalue){
         //switchSender.write(BALROGOPEN);
         DEBUG_PRINTLN("SwitchSender::BALROGOPEN");   
