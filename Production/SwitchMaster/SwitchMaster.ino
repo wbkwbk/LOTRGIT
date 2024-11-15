@@ -141,6 +141,8 @@ void P5_InterruptRoutine(){
     }else{
       balrogOpen = false; 
     }
+  }else{
+    balrogOpen = false;  
   }
   //Switch 32 Balrogclosed is Open and Switch 31 Balrogopen is closed: Balrog is closed
   if(balrogClosedStatus_32 > analogReadSwitchClosed){
@@ -149,6 +151,8 @@ void P5_InterruptRoutine(){
     }else{
       balrogClosed = false;    
     }
+  }else{
+    balrogClosed = false;  
   }
   
 
