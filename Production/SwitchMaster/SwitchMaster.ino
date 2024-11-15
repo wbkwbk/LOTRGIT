@@ -160,12 +160,12 @@ void P5_InterruptRoutine(){
   if(BalrogHitStatus > analogReadSwitchClosed){
     consecutiveBalrogHigh++;
     //debounce
-    if(consecutiveBalrogHigh > 20){
-        balrogHit = true;
-        consecutiveBalrogHigh = 0;
+    if(consecutiveBalrogHigh > 40){
+        balrogHit = true;      
     }  
   }else{ 
     balrogHit = false;
+    consecutiveBalrogHigh = 0;
   }
 
   int RightRampEnterStatus = analogRead(RightRampEnterP9);
