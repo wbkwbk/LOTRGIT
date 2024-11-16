@@ -82,10 +82,13 @@ void setup() {
 void loop() {
 // Warte auf Balrog Hit
   if(balrogHit){
-    balrogHit = false;
-    delay(SWITCHDEBOUNCETIME);
-    //switchSender.write(BALROGHIT);
-    DEBUG_PRINTLN("SwitchSender::BALROGHIT"); 
+    if (!lastBalrogHitState) {
+      balrogHit = false;
+      //switchSender.write(BALROGHIT);
+      DEBUG_PRINTLN("SwitchSender::BALROGHIT");
+    }else{
+      lastBalrogHitState = false;  
+    } 
   }
   if(leftRampMade){
     delay(SWITCHDEBOUNCETIME);
@@ -168,18 +171,10 @@ void P5_InterruptRoutine(){
     RightRampEnter = false; 
   }  
 
-  int BalrogHitStatus = readStableValue(BalrogHitP6);
+  int BalrogHitStatus = analogRead(BalrogHitP6);
   if(BalrogHitStatus > analogReadSwitchClosed){
-    if (!lastBalrogHitState) {
-      // wait until value is stable
-      if (millis() - lastDebounceTimeBalrogHit > debounceDelayBalorgHit) {
-        balrogHit = true;
-        lastDebounceTimeBalrogHit = millis();  // update last time
-      }
-    }
-    lastBalrogHitState = true;
+    balrogHit = true;
   } else {
-    lastBalrogHitState = false;
     balrogHit = false;  // Reset the Hit-Flag
   }
 
