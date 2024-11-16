@@ -51,6 +51,8 @@ int balrogClosedP1_32 = A4;
 volatile boolean balrogClosed = false;
 volatile int consecutiveBalrogHigh = 0;
 int analogReadSwitchClosed = 300;
+//for reasons not known yet Balrogclosed is sometimes as high as 600
+int analogReadSwitchClosedBalrogHit = 800;
 boolean lastBalrogClosedValue;
 boolean lastBalrogOpenvalue;
 
@@ -58,6 +60,12 @@ boolean lastBalrogOpenvalue;
 volatile unsigned long lastDebounceTimeBalrogHit = 0;
 volatile unsigned long debounceDelayBalorgHit = 50;  // debounce time in millis
 boolean lastBalrogHitState = false;
+
+volatile unsigned long debounceDelayGeneralSwitch = 50;  // debounce time in millis
+
+volatile unsigned long lastDebounceLeftRampMade = 0;
+boolean lastLeftRampMAdeState = false;
+
 
 
 SoftwareSerial switchSender(RXPIN, TXPIN); // RX, TX
@@ -80,16 +88,12 @@ void setup() {
 }
 
 void loop() {
-// Warte auf Balrog Hit
+  // Prüfe auf Balrog Hit
   if(balrogHit){
-    if (!lastBalrogHitState) {
       balrogHit = false;
-      //switchSender.write(BALROGHIT);
       DEBUG_PRINTLN("SwitchSender::BALROGHIT");
-    }else{
-      lastBalrogHitState = false;  
-    } 
   }
+
   if(leftRampMade){
     delay(SWITCHDEBOUNCETIME);
     //switchSender.write(LEFTRAMPMADE);
@@ -172,9 +176,17 @@ void P5_InterruptRoutine(){
   }  
 
   int BalrogHitStatus = analogRead(BalrogHitP6);
-  if(BalrogHitStatus > analogReadSwitchClosed){
-    balrogHit = true;
+  if(BalrogHitStatus > analogReadSwitchClosedBalrogHit){
+    if (!lastBalrogHitState) {
+      // wait until value is stable
+      if (millis() - lastDebounceTimeBalrogHit > debounceDelayBalorgHit) {
+        balrogHit = true;
+        lastDebounceTimeBalrogHit = millis();  // update last time
+      }
+    }
+    lastBalrogHitState = true;
   } else {
+    lastBalrogHitState = false;
     balrogHit = false;  // Reset the Hit-Flag
   }
 
