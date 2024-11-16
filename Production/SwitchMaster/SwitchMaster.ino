@@ -30,7 +30,6 @@
 #define BALROGCLOSED 5
 #define LEFTORBITLOW 6
 
-#define SWITCHDEBOUNCETIME 20
 
 
 
@@ -60,14 +59,13 @@ boolean lastBalrogOpenvalue;
 volatile unsigned long lastDebounceTimeBalrogHit = 0;
 volatile unsigned long debounceDelayBalorgHit = 50;  // debounce time in millis
 boolean lastBalrogHitState = false;
-
 volatile unsigned long debounceDelayGeneralSwitch = 50;  // debounce time in millis
-
 volatile unsigned long lastDebounceTimeLeftRampMade = 0;
 boolean lastLeftRampMadeState = false;
-
 volatile unsigned long lastDebounceTimeLeftOrbit = 0;
 boolean lastLeftOrbitMadeState = false;
+volatile unsigned long lastDebounceTimeRightRampEnter = 0;
+boolean lastRightRampMadeState = false;
 
 SoftwareSerial switchSender(RXPIN, TXPIN); // RX, TX
 
@@ -96,6 +94,7 @@ void loop() {
   }
 
   if(leftRampMade){
+    leftRampMade=false;
     //switchSender.write(LEFTRAMPMADE);
     DEBUG_PRINTLN("SwitchSender::LEFTRAMPMADE"); 
     //todo move to EffectsSlave
@@ -106,14 +105,12 @@ void loop() {
 
   if(RightRampEnter){
     RightRampEnter = false;
-    delay(SWITCHDEBOUNCETIME);
     //switchSender.write(RIGHTRAMPENTER);
     DEBUG_PRINTLN("SwitchSender::RIGHTRAMPENTER"); 
   }
 
   if(LeftOrbitLow){
     LeftOrbitLow = false;
-    delay(SWITCHDEBOUNCETIME);
     //switchSender.write(LEFTORBITLOW);
     DEBUG_PRINTLN("SwitchSender::LEFTORBITLOW");
   }
@@ -173,10 +170,19 @@ void P5_InterruptRoutine(){
 
   int RightRampEnterStatus = analogRead(RightRampEnterP9);
   if(RightRampEnterStatus < analogReadSwitchClosed){
-    RightRampEnter = true;  
-  }else{
-    RightRampEnter = false; 
-  }  
+    if(!lastRightRampMadeState){
+      // wait until value is stable
+      if (millis() - lastDebounceTimeRightRampEnter > debounceDelayGeneralSwitch) {
+        RightRampEnter = true;
+        lastDebounceTimeRightRampEnter = millis();  // update last time
+        lastRightRampMadeState = true;
+      }
+    }
+    lastRightRampMadeState = true;
+  } else {
+    lastRightRampMadeState = false;
+    RightRampEnter = false;  // Reset the Hit-Flag
+  } 
 
   int BalrogHitStatus = analogRead(BalrogHitP6);
   if(BalrogHitStatus > analogReadSwitchClosedBalrogHit){
@@ -202,6 +208,7 @@ void P6_InterruptRoutine(){
       // wait until value is stable
       if (millis() - lastDebounceTimeLeftRampMade > debounceDelayGeneralSwitch) {
         leftRampMade = true;
+        lastLeftRampMadeState = true;
         lastDebounceTimeLeftRampMade = millis();  // update last time
       }      
     }
@@ -213,7 +220,7 @@ void P6_InterruptRoutine(){
   int LeftOrbitLowStatus = analogRead(LeftOrbitLowP5);
   if(LeftOrbitLowStatus < analogReadSwitchClosed){
     if(!lastLeftOrbitMadeState){
-      if(millis() - lastDebounceTimeLeftOrbit > debounceDelayBalorgHit) {
+      if(millis() - lastDebounceTimeLeftOrbit > debounceDelayGeneralSwitch) {
             LeftOrbitLow = true;
             lastLeftOrbitMadeState = true;
             lastDebounceTimeLeftOrbit = millis();
