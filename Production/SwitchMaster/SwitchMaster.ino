@@ -95,7 +95,7 @@ void loop() {
 
   if(leftRampMade){
     leftRampMade=false;
-    //switchSender.write(LEFTRAMPMADE);
+    switchSender.write(LEFTRAMPMADE);
     DEBUG_PRINTLN("SwitchSender::LEFTRAMPMADE"); 
     //todo move to EffectsSlave
     if(balrogOpen){
@@ -105,20 +105,20 @@ void loop() {
 
   if(RightRampEnter){
     RightRampEnter = false;
-    //switchSender.write(RIGHTRAMPENTER);
+    switchSender.write(RIGHTRAMPENTER);
     DEBUG_PRINTLN("SwitchSender::RIGHTRAMPENTER"); 
   }
 
   if(LeftOrbitLow){
     LeftOrbitLow = false;
-    //switchSender.write(LEFTORBITLOW);
+    switchSender.write(LEFTORBITLOW);
     DEBUG_PRINTLN("SwitchSender::LEFTORBITLOW");
   }
 
   //Balrog is NOT blocking center Ramp
   if(balrogClosed){ 
     if(!lastBalrogClosedValue){
-      //switchSender.write(BALROGCLOSED);
+      switchSender.write(BALROGCLOSED);
       DEBUG_PRINTLN("SwitchSender::BALROGCLOSED"); 
       lastBalrogClosedValue = true;
     }
@@ -129,7 +129,7 @@ void loop() {
   //balrog open: Balrog is in active position blocking center ramp
   if(balrogOpen){ 
     if(!lastBalrogOpenvalue){
-      //switchSender.write(BALROGOPEN);
+      switchSender.write(BALROGOPEN);
       DEBUG_PRINTLN("SwitchSender::BALROGOPEN");   
       lastBalrogOpenvalue = true;     
     }
