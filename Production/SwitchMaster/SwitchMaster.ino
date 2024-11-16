@@ -63,10 +63,11 @@ boolean lastBalrogHitState = false;
 
 volatile unsigned long debounceDelayGeneralSwitch = 50;  // debounce time in millis
 
-volatile unsigned long lastDebounceLeftRampMade = 0;
-boolean lastLeftRampMAdeState = false;
+volatile unsigned long lastDebounceTimeLeftRampMade = 0;
+boolean lastLeftRampMadeState = false;
 
-
+volatile unsigned long lastDebounceTimeLeftOrbit = 0;
+boolean lastLeftOrbitMadeState = false;
 
 SoftwareSerial switchSender(RXPIN, TXPIN); // RX, TX
 
@@ -95,7 +96,6 @@ void loop() {
   }
 
   if(leftRampMade){
-    delay(SWITCHDEBOUNCETIME);
     //switchSender.write(LEFTRAMPMADE);
     DEBUG_PRINTLN("SwitchSender::LEFTRAMPMADE"); 
     //todo move to EffectsSlave
@@ -103,12 +103,14 @@ void loop() {
         Serial.println("Playing YShallNP.mp3");
     }
   }
+
   if(RightRampEnter){
     RightRampEnter = false;
     delay(SWITCHDEBOUNCETIME);
     //switchSender.write(RIGHTRAMPENTER);
     DEBUG_PRINTLN("SwitchSender::RIGHTRAMPENTER"); 
   }
+
   if(LeftOrbitLow){
     LeftOrbitLow = false;
     delay(SWITCHDEBOUNCETIME);
@@ -156,6 +158,7 @@ void P5_InterruptRoutine(){
   }else{
     balrogOpen = false;  
   }
+
   //Switch 32 Balrogclosed is Open and Switch 31 Balrogopen is closed: Balrog is closed
   if(balrogClosedStatus_32 > analogReadSwitchClosed){
     if(balrogOpenStatus_31 < analogReadSwitchClosed){
@@ -195,17 +198,31 @@ void P5_InterruptRoutine(){
 void P6_InterruptRoutine(){
   int LeftRampMadeStatus = analogRead(LeftRampMadeP1);
   if(LeftRampMadeStatus < analogReadSwitchClosed){
-      leftRampMade = true;
+    if(!lastLeftRampMadeState){
+      // wait until value is stable
+      if (millis() - lastDebounceTimeLeftRampMade > debounceDelayGeneralSwitch) {
+        leftRampMade = true;
+        lastDebounceTimeLeftRampMade = millis();  // update last time
+      }      
+    }
   }else{
+      lastLeftRampMadeState = false;
       leftRampMade = false;
   } 
 
   int LeftOrbitLowStatus = analogRead(LeftOrbitLowP5);
   if(LeftOrbitLowStatus < analogReadSwitchClosed){
-    LeftOrbitLow = true;
+    if(!lastLeftOrbitMadeState){
+      if(millis() - lastDebounceTimeLeftOrbit > debounceDelayBalorgHit) {
+            LeftOrbitLow = true;
+            lastLeftOrbitMadeState = true;
+            lastDebounceTimeLeftOrbit = millis();
+      }
+    }
   }
   else{
     LeftOrbitLow = false;  
+    lastLeftOrbitMadeState = false;
   }
 }
 
