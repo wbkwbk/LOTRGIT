@@ -52,6 +52,7 @@
 
 int switchnumber;
 volatile boolean balrogClosed = false;
+volatile boolean balrogOpen = false;
 
 Adafruit_VS1053_FilePlayer musicPlayer = 
   // create breakout-example object!
@@ -98,15 +99,14 @@ void loop() {
 
     // Check for incoming serial data
     if (switchNumberReceiver.available() > 0) {
-        int switchnumber = switchNumberReceiver.parseInt();
-        DEBUG_PRINTLN(switchnumber);
+        int switchnumber = switchNumberReceiver.read();
         switch(switchnumber){
           case BALROGHIT:
             DEBUG_PRINTLN("EffectController::Balrog Hit");
           break;
           case LEFTRAMPMADE:
               DEBUG_PRINTLN("EffectController::Left Ramp Made");
-              if(!balrogClosed){
+              if(balrogOpen){
                 if(!musicPlayer.playingMusic){
                   musicPlayer.startPlayingFile("/YShallNP.mp3");
                 }  
@@ -118,10 +118,12 @@ void loop() {
           case BALROGOPEN:
             DEBUG_PRINTLN("EffectController::Balrog Open");  
             balrogClosed = false;
+            balrogOpen = true;
           break;
           case BALROGCLOSED:
             DEBUG_PRINTLN("EffectController::Balrog Closed");  
             balrogClosed = true;
+            balrogOpen = false;
           break;
           case LEFTORBITLOW:
             DEBUG_PRINTLN("EffectController::Left Orbit Low");

@@ -90,6 +90,7 @@ void loop() {
   // Prüfe auf Balrog Hit
   if(balrogHit){
       balrogHit = false;
+      switchSender.write(BALROGHIT);
       DEBUG_PRINTLN("SwitchSender::BALROGHIT");
   }
 
