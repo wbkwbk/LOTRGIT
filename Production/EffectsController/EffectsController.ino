@@ -23,8 +23,8 @@
 #define BALROGCLOSED 5
 #define LEFTORBITLOW 6
 
-#define RXPIN 51 //connect  the Switch Sending TXPIN
-#define TXPIN 53 //connect the Switch transmitting RXPIN
+#define RXPIN 10 //connect  the Switch Sending TXPIN
+#define TXPIN 11 //connect the Switch transmitting RXPIN
 
 #define TRXBAUDRATE 38400
 
