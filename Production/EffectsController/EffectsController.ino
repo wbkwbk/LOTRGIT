@@ -1,4 +1,3 @@
-#include "WS2812Wrapper.h"
 #include <SoftwareSerial.h>
 #include <SPI.h>
 #include <Adafruit_VS1053.h>
@@ -64,8 +63,7 @@ Adafruit_VS1053_FilePlayer musicPlayer =
 
 SoftwareSerial switchNumberReceiver(RXPIN, TXPIN); // RX, TX
 
-//                          num_led, pin, neoPixelType, animduration, brightness, speed
-WS2812Wrapper mainLEDStripe(50,22, NEO_GRBW + NEO_KHZ800, 5000, 200, 200);
+
 
 void setup() {
 
@@ -115,11 +113,8 @@ void loop() {
                 if(!musicPlayer.playingMusic){
                   musicPlayer.startPlayingFile("/YShallNP.mp3");
                 }  
-                DEBUG_PRINTLN("Start LED ANIM: FX_MODE_RAINBOW_CYCLE ");
-                mainLEDStripe.startAnim(FX_MODE_RAINBOW_CYCLE);
               }else{
-                mainLEDStripe.startAnim(FX_MODE_CHASE_FLASH);
-                DEBUG_PRINTLN("Start LED ANIM: FX_MODE_CHASE_FLASH ");
+                //todo play other sound
               }
           break;
           case RIGHTRAMPENTER:

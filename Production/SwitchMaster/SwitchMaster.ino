@@ -6,6 +6,7 @@
 	To be finalized when sound and led effects are integrated as well to check the timing
 */
 #include <SoftwareSerial.h>
+#include "WS2812Wrapper.h"
 
 #define DEBUG 1
 
@@ -69,6 +70,8 @@ boolean lastRightRampMadeState = false;
 
 SoftwareSerial switchSender(RXPIN, TXPIN); // RX, TX
 
+//                          num_led, pin, neoPixelType, animduration, brightness, speed
+WS2812Wrapper mainLEDStripe(50,22, NEO_GRBW + NEO_KHZ800, 5000, 200, 200);
 
 // Arduino initialisieren
 void setup() {
@@ -100,7 +103,11 @@ void loop() {
     DEBUG_PRINTLN("SwitchSender::LEFTRAMPMADE"); 
     //todo move to EffectsSlave
     if(balrogOpen){
-        Serial.println("Playing YShallNP.mp3");
+      DEBUG_PRINTLN("Start LED ANIM: FX_MODE_RAINBOW_CYCLE ");
+      mainLEDStripe.startAnim(FX_MODE_RAINBOW_CYCLE);
+    }else{
+      mainLEDStripe.startAnim(FX_MODE_CHASE_FLASH);
+      DEBUG_PRINTLN("Start LED ANIM: FX_MODE_CHASE_FLASH ");
     }
   }
 
@@ -137,7 +144,7 @@ void loop() {
   }else{
     lastBalrogOpenvalue = false;    
   }
-
+  mainLEDStripe.check();
 }
 
 
