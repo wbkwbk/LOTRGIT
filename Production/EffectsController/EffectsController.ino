@@ -23,8 +23,8 @@
 #define BALROGCLOSED 5
 #define LEFTORBITLOW 6
 
-#define RXPIN 0 //connect  the Switch Receiving D0 to the SwitchstateDedector Sender D6
-#define TXPIN 1 //connect the Switch transmitting D1 to the SwitchtstateDedector Receiver D0
+#define RXPIN 51 //connect  the Switch Receiving D0 to the SwitchstateDedector Sender D6
+#define TXPIN 53 //connect the Switch transmitting D1 to the SwitchtstateDedector Receiver D0
 
 #define TRXBAUDRATE 38400
 
@@ -99,6 +99,7 @@ void loop() {
     // Check for incoming serial data
     if (switchNumberReceiver.available() > 0) {
         int switchnumber = switchNumberReceiver.read();
+        DEBUG_PRINTLN(switchnumber);
         switch(switchnumber){
           case BALROGHIT:
             DEBUG_PRINTLN("EffectController::Balrog Hit");
