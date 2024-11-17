@@ -31,6 +31,8 @@
 #define BALROGCLOSED 5
 #define LEFTORBITLOW 6
 
+#define MAINLEDSTRIPEPIN 7
+
 
 
 
@@ -71,7 +73,7 @@ boolean lastRightRampMadeState = false;
 SoftwareSerial switchSender(RXPIN, TXPIN); // RX, TX
 
 //                          num_led, pin, neoPixelType, animduration, brightness, speed
-WS2812Wrapper mainLEDStripe(50,22, NEO_GRBW + NEO_KHZ800, 5000, 200, 200);
+WS2812Wrapper mainLEDStripe(50,MAINLEDSTRIPEPIN, NEO_GRBW + NEO_KHZ800, 5000, 200, 200);
 
 // Arduino initialisieren
 void setup() {
