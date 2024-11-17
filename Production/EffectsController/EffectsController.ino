@@ -23,8 +23,8 @@
 #define BALROGCLOSED 5
 #define LEFTORBITLOW 6
 
-#define RXPIN 51 //connect  the Switch Receiving D0 to the SwitchstateDedector Sender D6
-#define TXPIN 53 //connect the Switch transmitting D1 to the SwitchtstateDedector Receiver D0
+#define RXPIN 51 //connect  the Switch Sending TXPIN
+#define TXPIN 53 //connect the Switch transmitting RXPIN
 
 #define TRXBAUDRATE 38400
 

@@ -19,8 +19,8 @@
 #define DEBUG_PRINTLN(x)
 #endif
 
-#define RXPIN 10 //connect SwitchstateDedector Receiving D0 to Switch Transmitter D1
-#define TXPIN 11 //connect the SwitchstateDedector Transmitting D6 to the Hardware Receiving D0 of the Swtich Receiver EffectsSlave
+#define RXPIN 10 //connect to Effectscontroller TXPIN
+#define TXPIN 11 //connect to Effects controller RXPIN
 #define TRXBAUDRATE 38400
 
 #define BALROGHIT 1
