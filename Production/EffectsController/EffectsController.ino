@@ -98,7 +98,7 @@ void loop() {
 
     // Check for incoming serial data
     if (switchNumberReceiver.available() > 0) {
-        int switchnumber = switchNumberReceiver.read();
+        int switchnumber = switchNumberReceiver.parseInt();
         DEBUG_PRINTLN(switchnumber);
         switch(switchnumber){
           case BALROGHIT:
