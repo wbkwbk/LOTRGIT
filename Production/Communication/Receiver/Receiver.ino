@@ -17,8 +17,8 @@
 
 
 // Definiere die Pins für SoftwareSerial (die Pins 8 und 9)
-#define RXPIN 10 //connect  the Switch Receiving D0 to the SwitchstateDedector Sender D6
-#define TXPIN 11 //connect the Switch transmitting D1 to the SwitchtstateDedector Receiver D0
+#define RXPIN 8 //connect  the Switch Receiving D0 to the SwitchstateDedector Sender D6
+#define TXPIN 9 //connect the Switch transmitting D1 to the SwitchtstateDedector Receiver D0
 
 //SoundShield
 // define the pins used
@@ -53,7 +53,7 @@ SoftwareSerial mySerial(RXPIN, TXPIN);  // Erstelle ein SoftwareSerial-Objekt
 void setup() {
   // Starte die serielle Kommunikation mit dem PC und mit dem Uno
   Serial.begin(9600);  // Serielle Kommunikation mit dem PC
-  mySerial.begin(9600);  // Serielle Kommunikation mit dem Uno
+  mySerial.begin(38400);  // Serielle Kommunikation mit dem Uno
 
   if (! musicPlayer.begin()) { // initialise the music player
      DEBUG_PRINTLN("Couldn't find VS1053, do you have the right pins defined?");
