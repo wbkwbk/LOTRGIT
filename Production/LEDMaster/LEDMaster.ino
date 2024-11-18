@@ -23,9 +23,17 @@
 #define LEFTORBITLOW 6
 #define MAINLEDSTRIPEPIN 7
 
-#define RXPIN 8 //connect  the Switch Sending TXPIN
-#define TXPIN 9 //connect the Switch transmitting RXPIN
-SoftwareSerial switchNumberReceiver(RXPIN, TXPIN); // RX, TX
+#define RXPINTOSOUNDMASTER 10 //connect  the Switch Sending TXPIN
+#define TXPINTOSOUNDMASTER 11 //connect the Switch transmitting RXPIN
+
+#define RXPINTOSWITCHMASTER 8 //connect  the Switch Sending TXPINTOSWITCHMASTER
+#define TXPINTOSWITCHMASTER 9 //connect the Switch transmitting RXPINTOSWITCHMASTER
+
+
+SoftwareSerial switchNumberReceiver(RXPINTOSWITCHMASTER, TXPINTOSWITCHMASTER); // RX, TX
+SoftwareSerial switchSender(RXPINTOSOUNDMASTER, TXPINTOSOUNDMASTER); // RX, TX
+
+
 
 WS2812Wrapper mainLEDStripe(50,MAINLEDSTRIPEPIN, NEO_GRBW + NEO_KHZ800, 5000, 200, 200);
 
@@ -51,9 +59,11 @@ void loop() {
         switch(switchnumber){
           case BALROGHIT:
             DEBUG_PRINTLN("EffectController::Balrog Hit");
+            switchSender.write(BALROGHIT);
           break;
           case LEFTRAMPMADE:
               DEBUG_PRINTLN("EffectController::Left Ramp Made");
+              switchSender.write(LEFTRAMPMADE);
               if(balrogOpen){
                 DEBUG_PRINTLN("Start LED ANIM: FX_MODE_RAINBOW_CYCLE ");
                 mainLEDStripe.startAnim(FX_MODE_RAINBOW_CYCLE);                  
@@ -64,19 +74,23 @@ void loop() {
           break;
           case RIGHTRAMPENTER:
             DEBUG_PRINTLN("EffectController::Right Ramp Entered");  
+            switchSender.write(RIGHTRAMPENTER);
           break;
           case BALROGOPEN:
             DEBUG_PRINTLN("EffectController::Balrog Open");  
+            switchSender.write(BALROGOPEN);             
             balrogClosed = false;
             balrogOpen = true;
           break;
           case BALROGCLOSED:
-            DEBUG_PRINTLN("EffectController::Balrog Closed");  
+            DEBUG_PRINTLN("EffectController::Balrog Closed");             
+            switchSender.write(BALROGCLOSED);            
             balrogClosed = true;
             balrogOpen = false;
           break;
           case LEFTORBITLOW:
             DEBUG_PRINTLN("EffectController::Left Orbit Low");
+            switchSender.write(LEFTORBITLOW);            
           break;          
         }  
     }
