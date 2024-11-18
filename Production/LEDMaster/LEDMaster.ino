@@ -52,18 +52,17 @@ void setup() {
 
 
 void loop() {
-
     // Check for incoming serial data
     if (switchNumberReceiver.available() > 0) {
         int switchnumber = switchNumberReceiver.read();
         switch(switchnumber){
           case BALROGHIT:
             DEBUG_PRINTLN("EffectController::Balrog Hit");
-            switchSender.write(BALROGHIT);
+            //switchSender.write(BALROGHIT);
           break;
           case LEFTRAMPMADE:
               DEBUG_PRINTLN("EffectController::Left Ramp Made");
-              switchSender.write(LEFTRAMPMADE);
+              //switchSender.write(LEFTRAMPMADE);
               if(balrogOpen){
                 DEBUG_PRINTLN("Start LED ANIM: FX_MODE_RAINBOW_CYCLE ");
                 mainLEDStripe.startAnim(FX_MODE_RAINBOW_CYCLE);                  
@@ -74,23 +73,23 @@ void loop() {
           break;
           case RIGHTRAMPENTER:
             DEBUG_PRINTLN("EffectController::Right Ramp Entered");  
-            switchSender.write(RIGHTRAMPENTER);
+            //switchSender.write(RIGHTRAMPENTER);
           break;
           case BALROGOPEN:
             DEBUG_PRINTLN("EffectController::Balrog Open");  
-            switchSender.write(BALROGOPEN);             
+            //switchSender.write(BALROGOPEN);             
             balrogClosed = false;
             balrogOpen = true;
           break;
           case BALROGCLOSED:
             DEBUG_PRINTLN("EffectController::Balrog Closed");             
-            switchSender.write(BALROGCLOSED);            
+            //switchSender.write(BALROGCLOSED);            
             balrogClosed = true;
             balrogOpen = false;
           break;
           case LEFTORBITLOW:
             DEBUG_PRINTLN("EffectController::Left Orbit Low");
-            switchSender.write(LEFTORBITLOW);            
+            //switchSender.write(LEFTORBITLOW);            
           break;          
         }  
     }
