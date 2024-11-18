@@ -23,8 +23,8 @@
 #define LEFTORBITLOW 6
 #define MAINLEDSTRIPEPIN 7
 
-#define RXPINTOSOUNDMASTER 10 //connect  the Switch Sending TXPIN
-#define TXPINTOSOUNDMASTER 11 //connect the Switch transmitting RXPIN
+#define RXPINTOSOUNDMASTER 0 //connect  the Switch Sending TXPIN
+#define TXPINTOSOUNDMASTER 6 //connect the Switch transmitting RXPIN
 
 #define RXPINTOSWITCHMASTER 8 //connect  the Switch Sending TXPINTOSWITCHMASTER
 #define TXPINTOSWITCHMASTER 9 //connect the Switch transmitting RXPINTOSWITCHMASTER
@@ -46,7 +46,7 @@ void setup() {
     #ifdef DEBUG
         Serial.begin(9600);
     #endif
-    switchNumberReceiver.begin(TRXBAUDRATE);
+    Serial1.begin(TRXBAUDRATE);
 
 }
 
@@ -58,11 +58,11 @@ void loop() {
         switch(switchnumber){
           case BALROGHIT:
             DEBUG_PRINTLN("EffectController::Balrog Hit");
-            //switchSender.write(BALROGHIT);
+            switchSender.write(BALROGHIT);
           break;
           case LEFTRAMPMADE:
               DEBUG_PRINTLN("EffectController::Left Ramp Made");
-              //switchSender.write(LEFTRAMPMADE);
+              switchSender.write(LEFTRAMPMADE);
               if(balrogOpen){
                 DEBUG_PRINTLN("Start LED ANIM: FX_MODE_RAINBOW_CYCLE ");
                 mainLEDStripe.startAnim(FX_MODE_RAINBOW_CYCLE);                  

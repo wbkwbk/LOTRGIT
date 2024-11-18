@@ -25,8 +25,8 @@
 #define LEFTORBITLOW 6
 
 
-#define RXPINTOSEDMASTER 10 //connect  the Switch Sending TXPINTOSWITCHMASTER
-#define TXPINTOSLEDMASTER 11 //connect the Switch transmitting RXPINTOSWITCHMASTER
+#define RXPINTOSEDMASTER 0 //connect  the Switch Sending TXPINTOSWITCHMASTER
+#define TXPINTOSLEDMASTER 1 //connect the Switch transmitting RXPINTOSWITCHMASTER
 
 #define TRXBAUDRATE 38400
 
