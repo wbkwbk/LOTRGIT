@@ -30,6 +30,7 @@
 #define TXPINTOSWITCHMASTER 9 //connect the Switch transmitting RXPINTOSWITCHMASTER
 
 
+
 SoftwareSerial switchNumberReceiver(RXPINTOSWITCHMASTER, TXPINTOSWITCHMASTER); // RX, TX
 SoftwareSerial switchSender(RXPINTOSOUNDMASTER, TXPINTOSOUNDMASTER); // RX, TX
 
@@ -43,11 +44,13 @@ volatile boolean balrogOpen = false;
 
 void setup() {
 
+  ardSerialInitPatch();
+
     #ifdef DEBUG
         Serial.begin(9600);
     #endif
-    Serial1.begin(TRXBAUDRATE);
-
+    switchNumberReceiver.begin(TRXBAUDRATE);
+    switchSender.begin(TRXBAUDRATE);
 }
 
 
@@ -58,7 +61,7 @@ void loop() {
         switch(switchnumber){
           case BALROGHIT:
             DEBUG_PRINTLN("EffectController::Balrog Hit");
-            switchSender.write(BALROGHIT);
+            //switchSender.write(BALROGHIT);
           break;
           case LEFTRAMPMADE:
               DEBUG_PRINTLN("EffectController::Left Ramp Made");
@@ -95,3 +98,25 @@ void loop() {
     }
     mainLEDStripe.check();
 }        
+
+void ardSerialInitPatch( void )
+{ 
+    static boolean do_once = true;
+
+    if( do_once )
+    {
+        do_once = false;
+
+        uint32_t start_time = millis();
+
+        //Setup the baud rate
+        Serial.begin( 115200 );
+
+        while( !Serial && (millis() - start_time) < 5000 )
+        {
+            ; // wait for serial port to connect. Needed for native USB
+        }
+
+        Serial.println(F("!"));
+    }
+}
