@@ -1,6 +1,5 @@
-#include <SoftwareSerial.h>
 #include "WS2812Wrapper.h"
-
+#include <SoftwareSerial.h>
 
 #define DEBUG 1
 
@@ -14,6 +13,7 @@
 #define DEBUG_PRINTLN(x)
 #endif
 
+#define TRXBAUDRATE 38400
 
 #define BALROGHIT 1
 #define LEFTRAMPMADE 2
@@ -21,23 +21,17 @@
 #define BALROGOPEN 4
 #define BALROGCLOSED 5
 #define LEFTORBITLOW 6
+#define MAINLEDSTRIPEPIN 7
 
-#define RXPIN 10 //connect  the Switch Sending TXPIN
-#define TXPIN 11 //connect the Switch transmitting RXPIN
+#define RXPIN 8 //connect  the Switch Sending TXPIN
+#define TXPIN 9 //connect the Switch transmitting RXPIN
+SoftwareSerial switchNumberReceiver(RXPIN, TXPIN); // RX, TX
 
-#define TRXBAUDRATE 38400
-
-#define MAINLEDSTRIPEPIN 25
+WS2812Wrapper mainLEDStripe(50,MAINLEDSTRIPEPIN, NEO_GRBW + NEO_KHZ800, 5000, 200, 200);
 
 int switchnumber;
 volatile boolean balrogClosed = false;
 volatile boolean balrogOpen = false;
-
-
-
-SoftwareSerial switchNumberReceiver(RXPIN, TXPIN); // RX, TX
-
-WS2812Wrapper mainLEDStripe(50,MAINLEDSTRIPEPIN, NEO_GRBW + NEO_KHZ800, 5000, 200, 200);
 
 void setup() {
 
@@ -47,6 +41,7 @@ void setup() {
     switchNumberReceiver.begin(TRXBAUDRATE);
 
 }
+
 
 void loop() {
 
@@ -61,7 +56,7 @@ void loop() {
               DEBUG_PRINTLN("EffectController::Left Ramp Made");
               if(balrogOpen){
                 DEBUG_PRINTLN("Start LED ANIM: FX_MODE_RAINBOW_CYCLE ");
-                mainLEDStripe.startAnim(FX_MODE_RAINBOW_CYCLE);
+                mainLEDStripe.startAnim(FX_MODE_RAINBOW_CYCLE);                  
               }else{
                 mainLEDStripe.startAnim(FX_MODE_CHASE_FLASH);
                 DEBUG_PRINTLN("Start LED ANIM: FX_MODE_CHASE_FLASH ");
@@ -87,5 +82,3 @@ void loop() {
     }
     mainLEDStripe.check();
 }        
-
-
