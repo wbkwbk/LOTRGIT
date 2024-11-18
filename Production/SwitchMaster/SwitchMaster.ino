@@ -6,7 +6,11 @@
 	To be finalized when sound and led effects are integrated as well to check the timing
 */
 #include <SoftwareSerial.h>
-#include "WS2812Wrapper.h"
+#include <SPI.h>
+#include <Adafruit_VS1053.h>
+#include <SD.h>
+
+
 
 #define DEBUG 1
 
@@ -31,14 +35,39 @@
 #define BALROGCLOSED 5
 #define LEFTORBITLOW 6
 
-#define MAINLEDSTRIPEPIN 7
 
 
+//SoundShield
+// define the pins used
+#define CLK 13       // SPI Clock, shared with SD card
+#define MISO 12      // Input data, from VS1053/SD card
+#define MOSI 11      // Output data, to VS1053/SD card
+// Connect CLK, MISO and MOSI to hardware SPI pins. 
+// See http://arduino.cc/en/Reference/SPI "Connections"
 
+// These are the pins used for the breakout example
+//define BREAKOUT_RESET  9      // VS1053 reset pin (output)
+//define BREAKOUT_CS     10     // VS1053 chip select pin (output)
+//define BREAKOUT_DCS    8      // VS1053 Data/command select pin (output)
+// These are the pins used for the music maker shield
+#define SHIELD_RESET  -1      // VS1053 reset pin (unused!)
+#define SHIELD_CS     7      // VS1053 chip select pin (output)
+#define SHIELD_DCS    6      // VS1053 Data/command select pin (output)
+
+// These are common pins between breakout and shield
+#define CARDCS 4     // Card chip select pin
+// DREQ should be an Int pin, see http://arduino.cc/en/Reference/attachInterrupt
+#define DREQ 3       // VS1053 Data request, ideally an Interrupt pin
+
+Adafruit_VS1053_FilePlayer musicPlayer = 
+  // create breakout-example object!
+  //Adafruit_VS1053_FilePlayer(BREAKOUT_RESET, BREAKOUT_CS, BREAKOUT_DCS, DREQ, CARDCS);
+  // create shield-example object!
+  Adafruit_VS1053_FilePlayer(SHIELD_RESET, SHIELD_CS, SHIELD_DCS, DREQ, CARDCS);
 
 //variable declaration
-int MatrixColumnP5Pin = 2;
-int MatrixColumnP6Pin = 3;
+int MatrixColumnP5Pin = 20;
+int MatrixColumnP6Pin = 21;
 int BalrogHitP6 = A0;  
 volatile boolean balrogHit = false;
 int LeftRampMadeP1 = A1; 
@@ -73,7 +102,7 @@ boolean lastRightRampMadeState = false;
 SoftwareSerial switchSender(RXPIN, TXPIN); // RX, TX
 
 //                          num_led, pin, neoPixelType, animduration, brightness, speed
-WS2812Wrapper mainLEDStripe(50,MAINLEDSTRIPEPIN, NEO_GRBW + NEO_KHZ800, 5000, 200, 200);
+
 
 // Arduino initialisieren
 void setup() {
@@ -89,6 +118,32 @@ void setup() {
   Serial.begin(9600);
   attachInterrupt(digitalPinToInterrupt(MatrixColumnP5Pin), P5_InterruptRoutine, FALLING);
   attachInterrupt(digitalPinToInterrupt(MatrixColumnP6Pin), P6_InterruptRoutine, FALLING);
+
+  if (! musicPlayer.begin()) { // initialise the music player
+     DEBUG_PRINTLN("Couldn't find VS1053, do you have the right pins defined?");
+     //while (1);
+  }
+  DEBUG_PRINTLN("VS1053 found");
+  
+   if (!SD.begin(CARDCS)) {
+    DEBUG_PRINTLN("SD failed, or not present");
+    //while (1);  // don't do anything more
+  }
+
+  // list files
+  printDirectory(SD.open("/"), 0);
+  
+  // Set volume for left, right channels. lower numbers == louder volume!
+  // accepts values between 0 and 255 for left and right.
+  musicPlayer.setVolume(1,1);
+
+  // Timer interrupts are not suggested, better to use DREQ interrupt!
+  //musicPlayer.useInterrupt(VS1053_FILEPLAYER_TIMER0_INT); // timer int
+
+  // If DREQ is on an interrupt pin (on uno, #2 or #3) we can do background
+  // audio playing
+  if (! musicPlayer.useInterrupt(VS1053_FILEPLAYER_PIN_INT))
+    DEBUG_PRINTLN("DREQ pin is not an interrupt pin");      
 }
 
 void loop() {
@@ -105,11 +160,12 @@ void loop() {
     DEBUG_PRINTLN("SwitchSender::LEFTRAMPMADE"); 
     //todo move to EffectsSlave
     if(balrogOpen){
-      DEBUG_PRINTLN("Start LED ANIM: FX_MODE_RAINBOW_CYCLE ");
-      mainLEDStripe.startAnim(FX_MODE_RAINBOW_CYCLE);
+      if(!musicPlayer.playingMusic){
+        musicPlayer.startPlayingFile("/YShallNP.mp3");
+      }       
+
     }else{
-      mainLEDStripe.startAnim(FX_MODE_CHASE_FLASH);
-      DEBUG_PRINTLN("Start LED ANIM: FX_MODE_CHASE_FLASH ");
+      //todo other sound
     }
   }
 
@@ -146,7 +202,7 @@ void loop() {
   }else{
     lastBalrogOpenvalue = false;    
   }
-  mainLEDStripe.check();
+
 }
 
 
@@ -241,6 +297,32 @@ void P6_InterruptRoutine(){
     LeftOrbitLow = false;  
     lastLeftOrbitMadeState = false;
   }
+}
+
+/// File listing helper
+void printDirectory(File dir, int numTabs) {
+   while(true) {
+     
+     File entry =  dir.openNextFile();
+     if (! entry) {
+       // no more files
+       //Serial.println("**nomorefiles**");
+       break;
+     }
+     for (uint8_t i=0; i<numTabs; i++) {
+       Serial.print('\t');
+     }
+     Serial.print(entry.name());
+     if (entry.isDirectory()) {
+       Serial.println("/");
+       printDirectory(entry, numTabs+1);
+     } else {
+       // files have sizes, directories do not
+       Serial.print("\t\t");
+       Serial.println(entry.size(), DEC);
+     }
+     entry.close();
+   }
 }
 
 int readStableValue(int pin) {
