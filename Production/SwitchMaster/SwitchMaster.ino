@@ -22,8 +22,8 @@
 #define DEBUG_PRINTLN(x)
 #endif
 
-#define RXPIN 10 //connect to Effectscontroller TXPIN
-#define TXPIN 11 //connect to Effects controller RXPIN
+#define RXPINTOLEDMASTER 8 //connect to Effectscontroller RXPINTOLEDMASTER
+#define RXPINTOLEDMASTER 9 //connect to Effects controller RXPINTOLEDMASTER
 #define TRXBAUDRATE 38400
 
 #define BALROGHIT 1
@@ -71,7 +71,7 @@ boolean lastLeftOrbitMadeState = false;
 volatile unsigned long lastDebounceTimeRightRampEnter = 0;
 boolean lastRightRampMadeState = false;
 
-SoftwareSerial switchSender(RXPIN, TXPIN); // RX, TX
+SoftwareSerial switchSender(RXPINTOLEDMASTER, RXPINTOLEDMASTER); // RX, TX
 
 //                          num_led, pin, neoPixelType, animduration, brightness, speed
 
