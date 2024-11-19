@@ -22,8 +22,8 @@
 #define DEBUG_PRINTLN(x)
 #endif
 
-#define RXPINTOLEDMASTER 8 //connect to Effectscontroller RXPINTOLEDMASTER
-#define RXPINTOLEDMASTER 9 //connect to Effects controller RXPINTOLEDMASTER
+#define RXPINTOLEDMASTER 8 //10 for MEGA connect to Effectscontroller RXPINTOLEDMASTER
+#define RXPINTOLEDMASTER 9 //11 for MEGA connect to Effects controller RXPINTOLEDMASTER
 #define TRXBAUDRATE 38400
 
 #define BALROGHIT 1
