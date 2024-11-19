@@ -3,8 +3,8 @@
 #include <SPI.h>
 #include <Adafruit_VS1053.h>
 #include <SD.h>
-//IMPORTANT: Due to naming conflicts - WS2812Wrapper.h MUST be included After <SD.h>
-#include "WS2812Wrapper.h"
+//IMPORTANT: Due to naming conflicts - mainLedController.h MUST be included After <SD.h>
+#include "LEDController.h"
 
 #define DEBUG 1
 
@@ -27,20 +27,22 @@
 #define LEFTORBITLOW 6
 
 
-#define RXPINTOSEDMASTER 0 //connect  the Switch Sending TXPINTOSWITCHMASTER
-#define TXPINTOSLEDMASTER 1 //connect the Switch transmitting RXPINTOSWITCHMASTER
+#define RXPINTOSWITCHMASTER 10 //connect  the Switch Sending TXPINTOSWITCHMASTER
+#define TXPINTOSWITCHMASTER 11 //connect the Switch transmitting RXPINTOSWITCHMASTER
 
 #define TRXBAUDRATE 38400
 
 #define MAINLEDSTRIPEPIN 7
+#define LED_COUNT 70
 
 int switchnumber;
 volatile boolean balrogClosed = false;
 volatile boolean balrogOpen = false;
 
-SoftwareSerial switchNumberReceiver(RXPINTOSEDMASTER, TXPINTOSLEDMASTER); // RX, TX
+SoftwareSerial switchNumberReceiver(RXPINTOSWITCHMASTER, TXPINTOSWITCHMASTER); // RX, TX
 
-WS2812Wrapper mainLEDStripe(50,MAINLEDSTRIPEPIN, NEO_GRBW + NEO_KHZ800, 5000, 200, 200);
+                                                                                //brightness, speed, duration in millis 
+mainLedController mainLedController(LED_COUNT, MAINLEDSTRIPEPIN, FX_MODE_RAINBOW_CYCLE,   100,        200,   5000); // Adjust parameters as needed
 
 //SoundShield
 // define the pins used
@@ -102,6 +104,10 @@ void setup() {
     if (! musicPlayer.useInterrupt(VS1053_FILEPLAYER_PIN_INT)){
       DEBUG_PRINTLN("DREQ pin is not an interrupt pin");   
     }
+  mainLedController.init();
+  //mainLedController.setMode(FX_MODE_RUNNING_LIGHTS);
+  //mainLedController.start();
+
 }
 
 void loop() {
@@ -119,11 +125,15 @@ void loop() {
                 if(!musicPlayer.playingMusic){
                   musicPlayer.startPlayingFile("/YShallNP.mp3");
                   DEBUG_PRINTLN("Start LED ANIM: FX_MODE_RAINBOW_CYCLE ");
-                  mainLEDStripe.startAnim(FX_MODE_RAINBOW_CYCLE);                  
+                  mainLedController.setMode(FX_MODE_RAINBOW_CYCLE);
+                  mainLedController.start();
+                  mainLedController.service();                  
                 }                  
               }else{
                 //todo play other sound
-                mainLEDStripe.startAnim(FX_MODE_CHASE_FLASH);
+                mainLedController.setMode(FX_MODE_CHASE_FLASH);
+                mainLedController.start();
+                mainLedController.service(); 
                 DEBUG_PRINTLN("Start LED ANIM: FX_MODE_CHASE_FLASH ");
               }
           break;
@@ -145,7 +155,7 @@ void loop() {
           break;          
         }  
     }
-      mainLEDStripe.check();
+  mainLedController.service();
 }        
 
 
