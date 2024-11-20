@@ -121,20 +121,21 @@ void loop() {
           break;
           case LEFTRAMPMADE:
               DEBUG_PRINTLN("EffectController::Left Ramp Made");
+              DEBUG_PRINTLN(balrogOpen);
               if(balrogOpen){
                 if(!musicPlayer.playingMusic){
                   musicPlayer.startPlayingFile("/YShallNP.mp3");
                   DEBUG_PRINTLN("Start LED ANIM: FX_MODE_RAINBOW_CYCLE ");
-                  mainLedController.setMode(FX_MODE_RAINBOW_CYCLE);
-                  mainLedController.start();
-                  mainLedController.service();                  
+                  //mainLedController.setMode(FX_MODE_RAINBOW_CYCLE);
+                  //mainLedController.start();
+                  //mainLedController.service();                  
                 }                  
               }else{
                 //todo play other sound
-                mainLedController.setMode(FX_MODE_CHASE_FLASH);
-                mainLedController.start();
-                mainLedController.service(); 
-                DEBUG_PRINTLN("Start LED ANIM: FX_MODE_CHASE_FLASH ");
+                //mainLedController.setMode(FX_MODE_CHASE_FLASH);
+                //mainLedController.start();
+                //mainLedController.service(); 
+                //DEBUG_PRINTLN("Start LED ANIM: FX_MODE_CHASE_FLASH ");
               }
           break;
           case RIGHTRAMPENTER:
@@ -155,7 +156,7 @@ void loop() {
           break;          
         }  
     }
-  mainLedController.service();
+  //mainLedController.service();
 }        
 
 

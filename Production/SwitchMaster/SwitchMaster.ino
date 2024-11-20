@@ -6,7 +6,7 @@
 	To be finalized when sound and led effects are integrated as well to check the timing
 */
 #include <SoftwareSerial.h>
-
+#include "LEDController.h"
 
 
 
@@ -33,6 +33,8 @@
 #define BALROGCLOSED 5
 #define LEFTORBITLOW 6
 
+#define MAINLEDSTRIPEPIN 7
+#define LED_COUNT 70
 
 
 
@@ -74,6 +76,7 @@ boolean lastRightRampMadeState = false;
 SoftwareSerial switchSender(RXPINTOEFFECTSMASTER, TXPINTOEFFECTSMASTER); // RX, TX
 
 //                          num_led, pin, neoPixelType, animduration, brightness, speed
+mainLedController mainLedController(LED_COUNT, MAINLEDSTRIPEPIN, FX_MODE_RAINBOW_CYCLE,   100,        200,   5000); // Adjust parameters as needed
 
 
 // Arduino initialisieren
@@ -108,9 +111,15 @@ void loop() {
     DEBUG_PRINTLN("SwitchSender::LEFTRAMPMADE"); 
     //todo move to EffectsSlave
     if(balrogOpen){
-     //todo to be removed
+      DEBUG_PRINTLN("Start LED ANIM: FX_MODE_RAINBOW_CYCLE ");
+      mainLedController.setMode(FX_MODE_RAINBOW_CYCLE);
+      mainLedController.start();
+      mainLedController.service();
     }else{
-      //todo to be removed
+      mainLedController.setMode(FX_MODE_CHASE_FLASH);
+      mainLedController.start();
+      mainLedController.service(); 
+      DEBUG_PRINTLN("Start LED ANIM: FX_MODE_CHASE_FLASH ");
     }
   }
 
@@ -147,6 +156,8 @@ void loop() {
   }else{
     lastBalrogOpenvalue = false;    
   }
+    
+  mainLedController.service();
 
 }
 
