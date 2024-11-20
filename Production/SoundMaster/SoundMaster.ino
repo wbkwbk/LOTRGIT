@@ -107,7 +107,7 @@ void setup() {
     if (! musicPlayer.useInterrupt(VS1053_FILEPLAYER_PIN_INT)){
       DEBUG_PRINTLN("DREQ pin is not an interrupt pin");   
     }
-  mainLedController.init();
+
   //mainLedController.setMode(FX_MODE_RUNNING_LIGHTS);
   //mainLedController.start();
 
