@@ -4,7 +4,7 @@
 #include <Adafruit_VS1053.h>
 #include <SD.h>
 //IMPORTANT: Due to naming conflicts - mainLedController.h MUST be included After <SD.h>
-#include "LEDController.h"
+
 
 #define DEBUG 1
 
@@ -26,23 +26,25 @@
 #define BALROGCLOSED 5
 #define LEFTORBITLOW 6
 
-
+//sound master is receiving switch information from switchmaster and sending them further to LED Master
 #define RXPINTOSWITCHMASTER 10 //connect  the Switch Sending TXPINTOSWITCHMASTER
 #define TXPINTOSWITCHMASTER 11 //connect the Switch transmitting RXPINTOSWITCHMASTER
 
+#define RXPINTOLEDHMASTER 8 //
+#define TXPINTOLEDMASTER 9 //
+
 #define TRXBAUDRATE 38400
 
-#define MAINLEDSTRIPEPIN 7
-#define LED_COUNT 70
+
 
 int switchnumber;
 volatile boolean balrogClosed = false;
 volatile boolean balrogOpen = false;
 
 SoftwareSerial switchNumberReceiver(RXPINTOSWITCHMASTER, TXPINTOSWITCHMASTER); // RX, TX
+SoftwareSerial switchSender(RXPINTOLEDHMASTER, TXPINTOLEDMASTER); // RX, TX
 
-                                                                                //brightness, speed, duration in millis 
-mainLedController mainLedController(LED_COUNT, MAINLEDSTRIPEPIN, FX_MODE_RAINBOW_CYCLE,   100,        200,   5000); // Adjust parameters as needed
+
 
 //SoundShield
 // define the pins used
@@ -78,6 +80,7 @@ void setup() {
         Serial.begin(9600);
     #endif
     switchNumberReceiver.begin(TRXBAUDRATE);
+    switchSender.begin(TRXBAUDRATE);
     if (! musicPlayer.begin()) { // initialise the music player
        DEBUG_PRINTLN("Couldn't find VS1053, do you have the right pins defined?");
       //while (1);
@@ -118,10 +121,11 @@ void loop() {
         switch(switchnumber){
           case BALROGHIT:
             DEBUG_PRINTLN("EffectController::Balrog Hit");
+            switchSender.write(BALROGHIT);            
           break;
           case LEFTRAMPMADE:
               DEBUG_PRINTLN("EffectController::Left Ramp Made");
-              DEBUG_PRINTLN(balrogOpen);
+              switchSender.write(LEFTRAMPMADE);              
               if(balrogOpen){
                 if(!musicPlayer.playingMusic){
                   musicPlayer.startPlayingFile("/YShallNP.mp3");
@@ -139,20 +143,24 @@ void loop() {
               }
           break;
           case RIGHTRAMPENTER:
-            DEBUG_PRINTLN("EffectController::Right Ramp Entered");  
+            DEBUG_PRINTLN("EffectController::Right Ramp Entered");
+            switchSender.write(RIGHTRAMPENTER);              
           break;
           case BALROGOPEN:
             DEBUG_PRINTLN("EffectController::Balrog Open");  
+            switchSender.write(BALROGOPEN);            
             balrogClosed = false;
             balrogOpen = true;
           break;
           case BALROGCLOSED:
             DEBUG_PRINTLN("EffectController::Balrog Closed");  
+            switchSender.write(BALROGCLOSED);            
             balrogClosed = true;
             balrogOpen = false;
           break;
           case LEFTORBITLOW:
             DEBUG_PRINTLN("EffectController::Left Orbit Low");
+            switchSender.write(LEFTORBITLOW);            
           break;          
         }  
     }

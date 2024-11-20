@@ -1,4 +1,4 @@
-#include "WS2812Wrapper.h"
+#include "LEDController.h"
 #include <SoftwareSerial.h>
 
 #define DEBUG 1
@@ -23,20 +23,19 @@
 #define LEFTORBITLOW 6
 #define MAINLEDSTRIPEPIN 7
 
-#define RXPINTOSOUNDMASTER 0 //connect  the Switch Sending TXPIN
-#define TXPINTOSOUNDMASTER 6 //connect the Switch transmitting RXPIN
+#define LED_COUNT 70
 
-#define RXPINTOSWITCHMASTER 8 //connect  the Switch Sending TXPINTOSWITCHMASTER
-#define TXPINTOSWITCHMASTER 9 //connect the Switch transmitting RXPINTOSWITCHMASTER
-
+#define RXPINTOSOUNDMASTER 8 //connect  the Sound Sending TXPIN
+#define TXPINTOSOUNDMASTER 9 //connect the Sound transmitting RXPIN
 
 
-SoftwareSerial switchNumberReceiver(RXPINTOSWITCHMASTER, TXPINTOSWITCHMASTER); // RX, TX
-SoftwareSerial switchSender(RXPINTOSOUNDMASTER, TXPINTOSOUNDMASTER); // RX, TX
+SoftwareSerial switchNumberReceiver(RXPINTOSOUNDMASTER, TXPINTOSOUNDMASTER); // RX, TX
 
 
 
-WS2812Wrapper mainLEDStripe(50,MAINLEDSTRIPEPIN, NEO_GRBW + NEO_KHZ800, 5000, 200, 200);
+
+                                                                                //brightness, speed, duration in millis 
+mainLedController mainLedController(LED_COUNT, MAINLEDSTRIPEPIN, FX_MODE_RAINBOW_CYCLE,   100,        200,   5000); // Adjust parameters as needed
 
 int switchnumber;
 volatile boolean balrogClosed = false;
@@ -50,7 +49,6 @@ void setup() {
         Serial.begin(9600);
     #endif
     switchNumberReceiver.begin(TRXBAUDRATE);
-    switchSender.begin(TRXBAUDRATE);
 }
 
 
@@ -61,42 +59,38 @@ void loop() {
         switch(switchnumber){
           case BALROGHIT:
             DEBUG_PRINTLN("EffectController::Balrog Hit");
-            //switchSender.write(BALROGHIT);
           break;
           case LEFTRAMPMADE:
               DEBUG_PRINTLN("EffectController::Left Ramp Made");
-              switchSender.write(LEFTRAMPMADE);
               if(balrogOpen){
                 DEBUG_PRINTLN("Start LED ANIM: FX_MODE_RAINBOW_CYCLE ");
-                mainLEDStripe.startAnim(FX_MODE_RAINBOW_CYCLE);                  
+                mainLedController.setMode(FX_MODE_RAINBOW_CYCLE);
+                mainLedController.start();                  
               }else{
-                mainLEDStripe.startAnim(FX_MODE_CHASE_FLASH);
                 DEBUG_PRINTLN("Start LED ANIM: FX_MODE_CHASE_FLASH ");
+                mainLedController.setMode(FX_MODE_CHASE_FLASH);
+                mainLedController.start();
               }
           break;
           case RIGHTRAMPENTER:
             DEBUG_PRINTLN("EffectController::Right Ramp Entered");  
-            //switchSender.write(RIGHTRAMPENTER);
           break;
           case BALROGOPEN:
-            DEBUG_PRINTLN("EffectController::Balrog Open");  
-            //switchSender.write(BALROGOPEN);             
+            DEBUG_PRINTLN("EffectController::Balrog Open");               
             balrogClosed = false;
             balrogOpen = true;
           break;
           case BALROGCLOSED:
-            DEBUG_PRINTLN("EffectController::Balrog Closed");             
-            //switchSender.write(BALROGCLOSED);            
+            DEBUG_PRINTLN("EffectController::Balrog Closed");                         
             balrogClosed = true;
             balrogOpen = false;
           break;
           case LEFTORBITLOW:
-            DEBUG_PRINTLN("EffectController::Left Orbit Low");
-            //switchSender.write(LEFTORBITLOW);            
+            DEBUG_PRINTLN("EffectController::Left Orbit Low");            
           break;          
         }  
     }
-    mainLEDStripe.check();
+    mainLedController.service();
 }        
 
 void ardSerialInitPatch( void )
