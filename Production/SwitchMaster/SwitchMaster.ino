@@ -38,19 +38,19 @@
 
 
 //variable declaration
-int MatrixColumnP5Pin = 20;//2;
-int MatrixColumnP6Pin = 21; //3;
-int BalrogHitP6 = A8; //A0;  
+int MatrixColumnP5Pin = 2; //20;//2;
+int MatrixColumnP6Pin = 3; //21; //3;
+int BalrogHitP6 = A0; //A8; //A0;  
 volatile boolean balrogHit = false;
-int LeftRampMadeP1 = A9; //A1; 
+int LeftRampMadeP1 = A1; //A9; //A1; 
 volatile boolean leftRampMade = false; 
-int RightRampEnterP9 = A10; //A2;
+int RightRampEnterP9 = A2; //A10; //A2;
 volatile boolean RightRampEnter = false;
-int LeftOrbitLowP5 = A13; //A5; 
+int LeftOrbitLowP5 = A5; //A13; //A5; 
 volatile boolean LeftOrbitLow = false;
-int balrogOpenP2_31 = A11; //A3; 
+int balrogOpenP2_31 = A3; //A11; //A3; 
 volatile boolean balrogOpen = false;
-int balrogClosedP1_32 = A12; //A4; 
+int balrogClosedP1_32 = A4; //A12; //A4; 
 volatile boolean balrogClosed = false;
 volatile int consecutiveBalrogHigh = 0;
 int analogReadSwitchClosed = 300;
