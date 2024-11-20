@@ -33,8 +33,6 @@
 #define BALROGCLOSED 5
 #define LEFTORBITLOW 6
 
-#define MAINLEDSTRIPEPIN 7
-#define LED_COUNT 70
 
 
 
@@ -54,7 +52,6 @@ int balrogOpenP2_31 = A3; //A11; //A3;
 volatile boolean balrogOpen = false;
 int balrogClosedP1_32 = A4; //A12; //A4; 
 volatile boolean balrogClosed = false;
-volatile int consecutiveBalrogHigh = 0;
 int analogReadSwitchClosed = 300;
 //for reasons not known yet Balrogclosed is sometimes as high as 600
 int analogReadSwitchClosedBalrogHit = 800;
@@ -75,8 +72,6 @@ boolean lastRightRampMadeState = false;
 
 SoftwareSerial switchSender(RXPINTOEFFECTSMASTER, TXPINTOEFFECTSMASTER); // RX, TX
 
-//                          num_led, pin, neoPixelType, animduration, brightness, speed
-mainLedController mainLedController(LED_COUNT, MAINLEDSTRIPEPIN, FX_MODE_RAINBOW_CYCLE,   100,        200,   5000); // Adjust parameters as needed
 
 
 // Arduino initialisieren
@@ -111,15 +106,8 @@ void loop() {
     DEBUG_PRINTLN("SwitchSender::LEFTRAMPMADE"); 
     //todo move to EffectsSlave
     if(balrogOpen){
-      DEBUG_PRINTLN("Start LED ANIM: FX_MODE_RAINBOW_CYCLE ");
-      mainLedController.setMode(FX_MODE_RAINBOW_CYCLE);
-      mainLedController.start();
-      mainLedController.service();
+
     }else{
-      mainLedController.setMode(FX_MODE_CHASE_FLASH);
-      mainLedController.start();
-      mainLedController.service(); 
-      DEBUG_PRINTLN("Start LED ANIM: FX_MODE_CHASE_FLASH ");
     }
   }
 
@@ -157,7 +145,6 @@ void loop() {
     lastBalrogOpenvalue = false;    
   }
     
-  mainLedController.service();
 
 }
 

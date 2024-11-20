@@ -3,7 +3,6 @@
 #include <SPI.h>
 #include <Adafruit_VS1053.h>
 #include <SD.h>
-//IMPORTANT: Due to naming conflicts - mainLedController.h MUST be included After <SD.h>
 
 
 #define DEBUG 1
@@ -108,9 +107,6 @@ void setup() {
       DEBUG_PRINTLN("DREQ pin is not an interrupt pin");   
     }
 
-  //mainLedController.setMode(FX_MODE_RUNNING_LIGHTS);
-  //mainLedController.start();
-
 }
 
 void loop() {
@@ -128,18 +124,10 @@ void loop() {
               switchSender.write(LEFTRAMPMADE);              
               if(balrogOpen){
                 if(!musicPlayer.playingMusic){
-                  musicPlayer.startPlayingFile("/YShallNP.mp3");
-                  DEBUG_PRINTLN("Start LED ANIM: FX_MODE_RAINBOW_CYCLE ");
-                  //mainLedController.setMode(FX_MODE_RAINBOW_CYCLE);
-                  //mainLedController.start();
-                  //mainLedController.service();                  
+                  musicPlayer.startPlayingFile("/YShallNP.mp3");                 
                 }                  
               }else{
                 //todo play other sound
-                //mainLedController.setMode(FX_MODE_CHASE_FLASH);
-                //mainLedController.start();
-                //mainLedController.service(); 
-                //DEBUG_PRINTLN("Start LED ANIM: FX_MODE_CHASE_FLASH ");
               }
           break;
           case RIGHTRAMPENTER:
@@ -164,7 +152,6 @@ void loop() {
           break;          
         }  
     }
-  //mainLedController.service();
 }        
 
 

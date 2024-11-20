@@ -37,7 +37,7 @@ SoftwareSerial switchNumberReceiver(RXPINTOSOUNDMASTER, TXPINTOSOUNDMASTER); // 
                                                                                 //brightness, speed, duration in millis 
 mainLedController mainLedController(LED_COUNT, MAINLEDSTRIPEPIN, FX_MODE_RAINBOW_CYCLE,   100,        200,   5000); // Adjust parameters as needed
 
-int switchnumber;
+//int switchnumber;
 volatile boolean balrogClosed = false;
 volatile boolean balrogOpen = false;
 
@@ -94,24 +94,21 @@ void loop() {
     mainLedController.service();
 }        
 
+//Hack for arduion uno r4 - not used at the moment, instead
+//If upload to Arduino UNO R4 does not work Click reset button twice for DFU mode
+//Upload existing Blink script
 void ardSerialInitPatch( void )
 { 
     static boolean do_once = true;
-
-    if( do_once )
-    {
+    if( do_once ){
         do_once = false;
-
         uint32_t start_time = millis();
-
         //Setup the baud rate
         Serial.begin( 115200 );
-
         while( !Serial && (millis() - start_time) < 5000 )
         {
             ; // wait for serial port to connect. Needed for native USB
         }
-
         Serial.println(F("!"));
     }
 }
