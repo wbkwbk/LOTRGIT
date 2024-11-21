@@ -3,7 +3,7 @@
 #include <SPI.h>
 #include <Adafruit_VS1053.h>
 #include <SD.h>
-
+#include "SoundFileManager.h" 
 
 #define DEBUG 1
 
@@ -73,6 +73,18 @@ Adafruit_VS1053_FilePlayer musicPlayer =
   // create shield-example object!
   Adafruit_VS1053_FilePlayer(SHIELD_RESET, SHIELD_CS, SHIELD_DCS, DREQ, CARDCS);
 
+//# Liste aller Sounddateien
+const char* soundFiles[] = {
+"AWINL.mp3",
+"CWMML.mp3",
+"FOAT.mp3",
+"MIIJY.mp3",
+"PFB.mp3",
+"TINBOT.mp3"
+}; 
+
+SoundFileManager soundFileManager;
+
 void setup() {
 
     #ifdef DEBUG
@@ -127,7 +139,9 @@ void loop() {
                   musicPlayer.startPlayingFile("/YShallNP.mp3");                 
                 }                  
               }else{
-                //todo play other sound
+                if(!musicPlayer.playingMusic){
+                  musicPlayer.startPlayingFile(soundFileManager.getGandalfSound());                 
+                } 
               }
           break;
           case RIGHTRAMPENTER:
@@ -154,6 +168,10 @@ void loop() {
     }
 }        
 
+const char* getNexSoundtoPlay() {
+  int randomSoundIndex = random(0, 10);  // Zufallszahl zwischen 0 und 9 (10 Dateien)
+  return soundFiles[randomSoundIndex];   // Gibt den zufällig ausgewählten Sound zurück
+}
 
 /// File listing helper
 void printDirectory(File dir, int numTabs) {
