@@ -80,6 +80,7 @@ public:
     void start();
     void service();
     void init();
+    void stop();
     void setBrightness(int brightness); 
     void setSpeed(int speed);
     void setMode(int mode);

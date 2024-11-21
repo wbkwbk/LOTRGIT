@@ -65,10 +65,12 @@ void loop() {
               DEBUG_PRINTLN("EffectController::Left Ramp Made");
               if(balrogOpen){
                 DEBUG_PRINTLN("Start LED ANIM: FX_MODE_RAINBOW_CYCLE ");
+                mainLedController.stop();
                 mainLedController.setMode(FX_MODE_RAINBOW_CYCLE);
                 mainLedController.start();                  
               }else{
                 DEBUG_PRINTLN("Start LED ANIM: FX_MODE_CHASE_FLASH ");
+                mainLedController.stop();
                 mainLedController.setMode(FX_MODE_CHASE_FLASH);
                 mainLedController.start();
               }

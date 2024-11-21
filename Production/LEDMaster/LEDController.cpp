@@ -22,6 +22,11 @@ void mainLedController::start() {
     isAnimrunning = true;
 }
 
+void mainLedController::stop() {
+    ws2812fx.stop();
+    isAnimrunning = false;
+}
+
 void mainLedController::setBrightness(int brightness) {
     brightness_ = brightness;
     ws2812fx.setBrightness(brightness_);

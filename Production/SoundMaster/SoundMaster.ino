@@ -26,11 +26,11 @@
 #define LEFTORBITLOW 6
 
 //sound master is receiving switch information from switchmaster and sending them further to LED Master
-#define RXPINTOSWITCHMASTER 22//10 //connect  the Switch Sending TXPINTOSWITCHMASTER
-#define TXPINTOSWITCHMASTER 24 //11 //connect the Switch transmitting RXPINTOSWITCHMASTER
+#define RXPINTOSWITCHMASTER 10//22//10 //connect  the Switch Sending TXPINTOSWITCHMASTER
+#define TXPINTOSWITCHMASTER 11//24 //11 //connect the Switch transmitting RXPINTOSWITCHMASTER
 
-#define RXPINTOLEDHMASTER 26// 8 //
-#define TXPINTOLEDMASTER 28 //9 //
+#define RXPINTOLEDHMASTER 8//26// 8 //
+#define TXPINTOLEDMASTER 9//28 //9 //
 
 #define TRXBAUDRATE 38400
 
