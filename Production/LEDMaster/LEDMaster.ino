@@ -1,5 +1,6 @@
 #include "LEDController.h"
 #include <SoftwareSerial.h>
+#include "GandalfMagicWand.h"
 
 #define DEBUG 1
 
@@ -21,7 +22,11 @@
 #define BALROGOPEN 4
 #define BALROGCLOSED 5
 #define LEFTORBITLOW 6
+
+#define GANDALFWANDPINPIN 5
+#define GANDALFFLASHINGDURATION 5000
 #define MAINLEDSTRIPEPIN 7
+
 
 #define LED_COUNT 70
 
@@ -36,6 +41,7 @@ SoftwareSerial switchNumberReceiver(RXPINTOSOUNDMASTER, TXPINTOSOUNDMASTER); // 
 
                                                                                 //brightness, speed, duration in millis 
 mainLedController mainLedController(LED_COUNT, MAINLEDSTRIPEPIN, FX_MODE_RAINBOW_CYCLE,   100,        200,   5000); // Adjust parameters as needed
+GandalfMagicWand gandalfwand(GANDALFWANDPINPIN);
 
 //int switchnumber;
 volatile boolean balrogClosed = false;
@@ -60,6 +66,7 @@ void loop() {
         switch(switchnumber){
           case BALROGHIT:
             DEBUG_PRINTLN("EffectController::Balrog Hit");
+            gandalfwand.start(GANDALFFLASHINGDURATION);
           break;
           case LEFTRAMPMADE:
               DEBUG_PRINTLN("EffectController::Left Ramp Made");
@@ -94,6 +101,7 @@ void loop() {
         }  
     }
     mainLedController.service();
+    gandalfwand.update();
 }        
 
 //Hack for arduion uno r4 - not used at the moment, instead
