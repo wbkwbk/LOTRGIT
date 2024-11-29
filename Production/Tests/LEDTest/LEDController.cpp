@@ -31,6 +31,11 @@ void LEDController::setSpeed(int speed) {
 
 void LEDController::setMode(int mode) {
     mode_ = mode;
+    ws2812fx.setMode(mode_);
+}
+
+void LEDController::stop() {
+    ws2812fx.stop();
 }
 
 void LEDController::service() {

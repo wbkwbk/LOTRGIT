@@ -79,6 +79,7 @@ class LEDController {
 public:
     LEDController(uint16_t ledCount, uint8_t ledPin, uint8_t animMode, uint8_t brightness, uint16_t speed, uint16_t animRunDuration);
     void start();
+    void stop();
     void service();
     void init();
     void setBrightness(int brightness); 
