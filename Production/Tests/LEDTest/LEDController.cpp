@@ -24,10 +24,12 @@ void LEDController::start() {
 
 void LEDController::setBrightness(int brightness) {
     brightness_ = brightness;
+    ws2812fx.setBrightness(brightness_);
 }
 
 void LEDController::setSpeed(int speed) {
     speed_ = speed;
+    ws2812fx.setSpeed(speed_);
 }
 
 void LEDController::setMode(int mode) {
