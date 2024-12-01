@@ -1,6 +1,6 @@
 #include "LEDController.h"
 
-#define LED_COUNT_SCHWERT 90
+#define LED_COUNT_SCHWERT 110
 #define LED_COUNT_KAMM 100
 #define LED_COUNT_MAIN 70
 

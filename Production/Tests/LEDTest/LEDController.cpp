@@ -85,27 +85,27 @@ void LEDController::resetEffectUsage(bool used[], int size) {
 
 // Methods to get a random effect from each list
 int LEDController::getBalrogHitEffect() {
-    return getRandomEffect(balrogHitEffects, usedBalrogHit, 3);
+    return getRandomEffect(balrogHitEffects, usedBalrogHit, 7);
 }
 
 int LEDController::getBalrogOpenRampsEffect() {
-    return getRandomEffect(balrogOpenRampsEffects, usedBalrogOpenRamps, 4);
+    return getRandomEffect(balrogOpenRampsEffects, usedBalrogOpenRamps, 15);
 }
 
 int LEDController::getBalrogClosedRampsEffect() {
-    return getRandomEffect(balrogClosedRampsEffects, usedBalrogClosedRamps, 3);
+    return getRandomEffect(balrogClosedRampsEffects, usedBalrogClosedRamps, 15);
 }
 
 int LEDController::getBalrogOpenLeftOrbitEffect() {
-    return getRandomEffect(balrogOpenLeftOrbitEffects, usedBalrogOpenLeftOrbit, 2);
+    return getRandomEffect(balrogOpenLeftOrbitEffects, usedBalrogOpenLeftOrbit, 10);
 }
 
 int LEDController::getBalrogClosedLeftOrbitEffect() {
-    return getRandomEffect(balrogClosedLeftOrbitEffects, usedBalrogClosedLeftOrbit, 2);
+    return getRandomEffect(balrogClosedLeftOrbitEffects, usedBalrogClosedLeftOrbit, 10);
 }
 
 int LEDController::getBalrogClosedEffect() {
-    return getRandomEffect(balrogClosedEffects, usedBalrogClosed, 3);
+    return getRandomEffect(balrogClosedEffects, usedBalrogClosed, 2);
 }
 
 
