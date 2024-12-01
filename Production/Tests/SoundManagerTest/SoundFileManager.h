@@ -5,7 +5,7 @@
 
 class SoundFileManager {
   private:
-    static const int BALROGHIT_COUNT = 5;
+    static const int BALROGHIT_COUNT = 7;
     static const int BALROGOPENRAMPS_COUNT = 2;
     static const int BALROGCLOSEDRAMPS_COUNT = 16;
     static const int BALROGOPENLEFTORBIT_COUNT = 1;
@@ -14,7 +14,7 @@ class SoundFileManager {
 
     // Arrays für Sounddateien
     const char* balrogHitSounds[BALROGHIT_COUNT] = {
-      "ROAR1.mp3",	"GROWL.mp3",	"ROAR2.mp3",	"ROAR3.mp3",	"ROAR5.mp3"
+      "ROAR1.mp3",	"GROWL.mp3",	"ROAR2.mp3",	"ROAR3.mp3",	"ROAR5.mp3", "ROAR7.mp3", "ROAR8.mp3"
     };
     const char* balrogOpenRampsSounds[BALROGOPENRAMPS_COUNT] = {
       "OTBF.mp3",	"YSNPWE.mp3"
@@ -33,7 +33,7 @@ class SoundFileManager {
     };
 
     // Indizes zur Verfolgung der verwendeten Sounds
-    bool balrogHitUsed[BALROGHIT_COUNT] = { false, false, false, false, false };
+    bool balrogHitUsed[BALROGHIT_COUNT] = { false, false, false, false, false, false, false };
     bool balrogOpenRampsUsed[BALROGOPENRAMPS_COUNT] = { false, false};
     bool balrogClosedRampsUsed[BALROGCLOSEDRAMPS_COUNT] = { false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false };
     bool balrogOpenLeftOrbitUsed[BALROGOPENLEFTORBIT_COUNT] = { false};
