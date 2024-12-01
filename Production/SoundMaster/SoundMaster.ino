@@ -129,24 +129,36 @@ void loop() {
         switch(switchnumber){
           case BALROGHIT:
             DEBUG_PRINTLN("EffectController::Balrog Hit");
-            switchSender.write(BALROGHIT);            
+            switchSender.write(BALROGHIT);        
+            if(!musicPlayer.playingMusic){    
+              musicPlayer.startPlayingFile(soundFileManager.getBalrogHitEffect());  
+            }
           break;
           case LEFTRAMPMADE:
               DEBUG_PRINTLN("EffectController::Left Ramp Made");
               switchSender.write(LEFTRAMPMADE);              
               if(balrogOpen){
                 if(!musicPlayer.playingMusic){
-                  musicPlayer.startPlayingFile("/YShallNP.mp3");                 
+                  musicPlayer.startPlayingFile(soundFileManager.getBalrogOpenRampsEffect());                  
                 }                  
               }else{
                 if(!musicPlayer.playingMusic){
-                  musicPlayer.startPlayingFile(soundFileManager.getGandalfSound());                 
+                  musicPlayer.startPlayingFile(soundFileManager.getBalrogClosedRampsEffect());                  
                 } 
               }
           break;
           case RIGHTRAMPENTER:
             DEBUG_PRINTLN("EffectController::Right Ramp Entered");
-            switchSender.write(RIGHTRAMPENTER);              
+            switchSender.write(RIGHTRAMPENTER);  
+              if(balrogOpen){
+                if(!musicPlayer.playingMusic){
+                  musicPlayer.startPlayingFile(soundFileManager.getBalrogOpenRampsEffect());                  
+                }                  
+              }else{
+                if(!musicPlayer.playingMusic){
+                  musicPlayer.startPlayingFile(soundFileManager.getBalrogClosedRampsEffect());                  
+                } 
+              }
           break;
           case BALROGOPEN:
             DEBUG_PRINTLN("EffectController::Balrog Open");  
@@ -159,19 +171,26 @@ void loop() {
             switchSender.write(BALROGCLOSED);            
             balrogClosed = true;
             balrogOpen = false;
+            if(!musicPlayer.playingMusic){
+              musicPlayer.startPlayingFile(soundFileManager.getBalrogClosedEffect());                  
+            }
           break;
           case LEFTORBITLOW:
             DEBUG_PRINTLN("EffectController::Left Orbit Low");
-            switchSender.write(LEFTORBITLOW);            
+            switchSender.write(LEFTORBITLOW);     
+            if(balrogOpen){
+              if(!musicPlayer.playingMusic){
+                musicPlayer.startPlayingFile(soundFileManager.getBalrogOpenLeftOrbitEffect());                  
+              }                  
+            }else{
+              if(!musicPlayer.playingMusic){
+                musicPlayer.startPlayingFile(soundFileManager.getBalrogClosedLeftOrbitEffect());                  
+              } 
+            }                   
           break;          
         }  
     }
 }        
-
-const char* getNexSoundtoPlay() {
-  int randomSoundIndex = random(0, 10);  // Zufallszahl zwischen 0 und 9 (10 Dateien)
-  return soundFiles[randomSoundIndex];   // Gibt den zufällig ausgewählten Sound zurück
-}
 
 /// File listing helper
 void printDirectory(File dir, int numTabs) {
