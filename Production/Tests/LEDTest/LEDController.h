@@ -14,6 +14,7 @@ public:
     void setSpeed(int speed);
     void setMode(int mode);
     const char* getEffectName(int effect);
+    void setBalrogOpenState(boolean balrogstate);
     
     // Methods to get random effects
     int getBalrogHitEffect();
@@ -31,6 +32,7 @@ private:
     uint16_t speed_;
     unsigned long animStarttime;
     bool isAnimrunning;
+    bool isBalrogOpen = false;
 
     // Lists of effects
     const int balrogHitEffects[7] = {FX_MODE_BLINK , FX_MODE_STROBE , FX_MODE_MULTI_STROBE,FX_MODE_FIREWORKS , FX_MODE_FIRE_FLICKER , FX_MODE_FIRE_FLICKER_INTENSE , FX_MODE_TWINKLEFOX };

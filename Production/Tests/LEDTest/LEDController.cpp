@@ -32,9 +32,17 @@ void LEDController::setSpeed(int speed) {
     ws2812fx.setSpeed(speed_);
 }
 
+/*sets a new mode and starts the animation*/
 void LEDController::setMode(int mode) {
     mode_ = mode;
+    ws2812fx.stop();
     ws2812fx.setMode(mode_);
+    start();
+
+}
+
+void LEDController::setBalrogOpenState(boolean balrogstate) {
+    isBalrogOpen = balrogstate;
 }
 
 void LEDController::stop() {
@@ -43,7 +51,8 @@ void LEDController::stop() {
 
 void LEDController::service() {
     if (isAnimrunning) {
-        if (millis() - animStarttime < animRunDuration_) {
+        //during balrog open do never stop the animation
+        if (millis() - animStarttime < animRunDuration_ || isBalrogOpen) {
             ws2812fx.service();
         } else {
             ws2812fx.stop();
