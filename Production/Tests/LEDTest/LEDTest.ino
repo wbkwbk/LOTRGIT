@@ -19,18 +19,19 @@
 #define LED_SCHWERT 7
 #define LED_KAMM 8
 #define LED_MAIN 9
-#define LEDANIMBRIGHTNESS 200
+#define LEDANIMBRIGHTNESSMAIN 200
+#define LEDANIMBRIGHTNESKAMMUNDSCHWERT 200
 #define LEDANIMSPEED 200
 #define LEDANIMDURATION 5000
 
 unsigned long previousMillis = 0;  // Stores the last time the mode was updated
-const long interval = 15000;       // Interval to change mode (15 seconds)
+const long interval = 5000;       // Interval to change mode (15 seconds)
 
 // LEDController Instanzen
 //                                ledCount,   ledPin, animMode, brightness, speed, animRunDuration);
-LEDController ledControllerSchwert(LED_COUNT_SCHWERT, LED_SCHWERT, FX_MODE_RAINBOW_CYCLE,   LEDANIMBRIGHTNESS,        LEDANIMSPEED,   LEDANIMDURATION);
-LEDController ledControllerKamm(LED_COUNT_KAMM, LED_KAMM, FX_MODE_RUNNING_LIGHTS,   LEDANIMBRIGHTNESS,        LEDANIMSPEED,   LEDANIMDURATION);
-LEDController ledControllerMain(LED_COUNT_MAIN, LED_MAIN, FX_MODE_RUNNING_COLOR,   LEDANIMBRIGHTNESS,        LEDANIMSPEED,   LEDANIMDURATION);
+LEDController ledControllerSchwert(LED_COUNT_SCHWERT, LED_SCHWERT, FX_MODE_RAINBOW_CYCLE,   LEDANIMBRIGHTNESKAMMUNDSCHWERT,        LEDANIMSPEED,   LEDANIMDURATION);
+LEDController ledControllerKamm(LED_COUNT_KAMM, LED_KAMM, FX_MODE_RUNNING_LIGHTS,   LEDANIMBRIGHTNESKAMMUNDSCHWERT,        LEDANIMSPEED,   LEDANIMDURATION);
+LEDController ledControllerMain(LED_COUNT_MAIN, LED_MAIN, FX_MODE_RUNNING_COLOR,   LEDANIMBRIGHTNESSMAIN,        LEDANIMSPEED,   LEDANIMDURATION);
 
 void setup() {
 

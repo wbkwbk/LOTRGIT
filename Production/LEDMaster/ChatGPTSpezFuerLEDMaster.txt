@@ -1,0 +1,320 @@
+erweitere die klasse LecController.cpp, LedController.h und main.ino für aruino bitte so, dass diese 6 listen von effekten führt
+BalrogHit
+BalrogOpenRamps
+BalrogClosedRamps
+BalrogOpenLeftOrbit
+BalrogClosedLeftOrbit
+BalrogClosed
+
+
+plus 6 methoden
+getBalrogHitEffect
+getBalrogOpenRampsEffect
+getBalrogClosedRampsEffect
+getBalrogOpenLeftOrbitEffect
+getBalrogClosedLeftOrbitEffect
+getBalrogClosedEffect
+
+Jede methode soll zufällsmässig einen Effekt aus der jeweiligen Liste zurückgeben
+Jeder effekt jeder liste soll zufallsmässig einmal ausgewählt werden.
+Wenn alle effekte einer liste verwendet wurden - können wieder alle genau einmal verwendet werden, bis alle der liste verwendet wurden
+die listen können  unterschiedlich gross sein und eine unterschiedliche anzahl von effekten beihnhalten
+bitte  schreib  das programm so robust mit array initialisierung und prüfung, dass es nicht abstürzen kann
+bitte  verwende nur standard-c++ funktionen für arduino
+bitte verwende keine std::vector 
+bitte erweitere das hauptprogramm so, dass alle 6 listen jede mit einer unterschiedlichen anzhal von effekten gefüllt wird
+bitte erweitere das hauptprogramm so, dass für schwert kamm und main alle 15 sekunden die effekte zufallsmässig gewechselt werden und der 
+jeweilig gewählte effektname ausgegeben wird.
+ 
+
+LecController.cpp
+
+#include "LEDController.h"
+
+LEDController::LEDController(uint16_t ledCount, uint8_t ledPin, uint8_t animMode, uint8_t brightness, uint16_t speed, uint16_t animRunDuration) :
+    ws2812fx(ledCount, ledPin, NEO_GRB + NEO_KHZ800),
+    animRunDuration_(animRunDuration),
+    brightness_(brightness),
+    mode_(animMode),
+    speed_(speed) {
+}
+
+void LEDController::init() {
+    ws2812fx.init();
+    ws2812fx.setBrightness(brightness_);
+    ws2812fx.setSpeed(speed_);
+    ws2812fx.setMode(mode_);
+    isAnimrunning = false;
+}
+
+void LEDController::start() {
+    animStarttime = millis();
+    ws2812fx.start();
+    isAnimrunning = true;
+}
+
+void LEDController::setBrightness(int brightness) {
+    brightness_ = brightness;
+}
+void LEDController::setSpeed(int speed) {
+    speed_ = speed;
+}
+
+void LEDController::setMode(int mode) {
+    mode_ = mode;
+    ws2812fx.setMode(mode_);
+}
+
+void LEDController::stop() {
+    ws2812fx.stop();
+}
+
+void LEDController::service() {
+    if(isAnimrunning){
+      if(millis() - animStarttime < animRunDuration_){
+        ws2812fx.service();  
+      }else{
+        ws2812fx.stop();
+        isAnimrunning = false;
+      }
+    }
+  }
+  
+LedController.h
+
+/*
+
+#define FX_MODE_STATIC                   0
+#define FX_MODE_BLINK                    1
+#define FX_MODE_BREATH                   2
+#define FX_MODE_COLOR_WIPE               3
+#define FX_MODE_COLOR_WIPE_INV           4 
+#define FX_MODE_COLOR_WIPE_REV           5
+#define FX_MODE_COLOR_WIPE_REV_INV       6
+#define FX_MODE_COLOR_WIPE_RANDOM        7
+#define FX_MODE_RANDOM_COLOR             8
+#define FX_MODE_SINGLE_DYNAMIC           9
+#define FX_MODE_MULTI_DYNAMIC           10
+#define FX_MODE_RAINBOW                 11
+#define FX_MODE_RAINBOW_CYCLE           12
+#define FX_MODE_SCAN                    13
+#define FX_MODE_DUAL_SCAN               14
+#define FX_MODE_FADE                    15
+#define FX_MODE_THEATER_CHASE           16
+#define FX_MODE_THEATER_CHASE_RAINBOW   17
+#define FX_MODE_RUNNING_LIGHTS          18
+#define FX_MODE_TWINKLE                 19
+#define FX_MODE_TWINKLE_RANDOM          20
+#define FX_MODE_TWINKLE_FADE            21
+#define FX_MODE_TWINKLE_FADE_RANDOM     22
+#define FX_MODE_SPARKLE                 23
+#define FX_MODE_FLASH_SPARKLE           24
+#define FX_MODE_HYPER_SPARKLE           25
+#define FX_MODE_STROBE                  26
+#define FX_MODE_STROBE_RAINBOW          27
+#define FX_MODE_MULTI_STROBE            28
+#define FX_MODE_BLINK_RAINBOW           29
+#define FX_MODE_CHASE_WHITE             30
+#define FX_MODE_CHASE_COLOR             31
+#define FX_MODE_CHASE_RANDOM            32
+#define FX_MODE_CHASE_RAINBOW           33
+#define FX_MODE_CHASE_FLASH             34
+#define FX_MODE_CHASE_FLASH_RANDOM      35
+#define FX_MODE_CHASE_RAINBOW_WHITE     36
+#define FX_MODE_CHASE_BLACKOUT          37
+#define FX_MODE_CHASE_BLACKOUT_RAINBOW  38
+#define FX_MODE_COLOR_SWEEP_RANDOM      39
+#define FX_MODE_RUNNING_COLOR           40
+#define FX_MODE_RUNNING_RED_BLUE        41
+#define FX_MODE_RUNNING_RANDOM          42
+#define FX_MODE_LARSON_SCANNER          43
+#define FX_MODE_COMET                   44
+#define FX_MODE_FIREWORKS               45
+#define FX_MODE_FIREWORKS_RANDOM        46
+#define FX_MODE_MERRY_CHRISTMAS         47
+#define FX_MODE_FIRE_FLICKER            48
+#define FX_MODE_FIRE_FLICKER_SOFT       49
+#define FX_MODE_FIRE_FLICKER_INTENSE    50
+#define FX_MODE_CIRCUS_COMBUSTUS        51
+#define FX_MODE_HALLOWEEN               52
+#define FX_MODE_BICOLOR_CHASE           53
+#define FX_MODE_TRICOLOR_CHASE          54
+#define FX_MODE_TWINKLEFOX              55
+#define FX_MODE_RAIN                    56
+#define FX_MODE_CUSTOM                  57  // keep this for backward compatiblity
+#define FX_MODE_CUSTOM_0                57  // custom modes need to go at the end
+#define FX_MODE_CUSTOM_1                58
+#define FX_MODE_CUSTOM_2                59
+#define FX_MODE_CUSTOM_3                60
+#define FX_MODE_CUSTOM_4                61
+#define FX_MODE_CUSTOM_5                62
+#define FX_MODE_CUSTOM_6                63
+#define FX_MODE_CUSTOM_7                64
+
+*/
+
+
+#ifndef LEDCONTROLLER_H
+#define LEDCONTROLLER_H
+
+#include <WS2812FX.h>
+
+class LEDController {
+public:
+    LEDController(uint16_t ledCount, uint8_t ledPin, uint8_t animMode, uint8_t brightness, uint16_t speed, uint16_t animRunDuration);
+    void start();
+    void stop();
+    void service();
+    void init();
+    void setBrightness(int brightness); 
+    void setSpeed(int speed);
+    void setMode(int mode);
+
+private:
+    WS2812FX ws2812fx;
+    uint16_t animRunDuration_;
+    uint8_t brightness_;
+    uint8_t mode_;
+    uint16_t speed_;
+    unsigned  animStarttime;
+    bool isAnimrunning;
+
+};
+
+#endif
+
+main.ino
+
+#include "LEDController.h"
+
+
+#define LED_COUNT_SCHWERT 90
+#define LED_COUNT_KAMM 100
+#define LED_COUNT_MAIN 70
+
+#define LED_SCHWERT 7
+#define LED_KAMM 8
+#define LED_MAIN 9
+
+unsigned long previousMillis = 0;  // Stores the last time the mode was updated
+const long interval = 15000;       // Interval to change mode (15 seconds)
+uint8_t currentMode = FX_MODE_STATIC; // Start with the first mode
+
+// Mode names array
+const char* modeNames[] = {
+  "STATIC",
+  "BLINK",
+  "BREATH",
+  "COLOR_WIPE",
+  "COLOR_WIPE_INV",
+  "COLOR_WIPE_REV",
+  "COLOR_WIPE_REV_INV",
+  "COLOR_WIPE_RANDOM",
+  "RANDOM_COLOR",
+  "SINGLE_DYNAMIC",
+  "MULTI_DYNAMIC",
+  "RAINBOW",
+  "RAINBOW_CYCLE",
+  "SCAN",
+  "DUAL_SCAN",
+  "FADE",
+  "THEATER_CHASE",
+  "THEATER_CHASE_RAINBOW",
+  "RUNNING_LIGHTS",
+  "TWINKLE",
+  "TWINKLE_RANDOM",
+  "TWINKLE_FADE",
+  "TWINKLE_FADE_RANDOM",
+  "SPARKLE",
+  "FLASH_SPARKLE",
+  "HYPER_SPARKLE",
+  "STROBE",
+  "STROBE_RAINBOW",
+  "MULTI_STROBE",
+  "BLINK_RAINBOW",
+  "CHASE_WHITE",
+  "CHASE_COLOR",
+  "CHASE_RANDOM",
+  "CHASE_RAINBOW",
+  "CHASE_FLASH",
+  "CHASE_FLASH_RANDOM",
+  "CHASE_RAINBOW_WHITE",
+  "CHASE_BLACKOUT",
+  "CHASE_BLACKOUT_RAINBOW",
+  "COLOR_SWEEP_RANDOM",
+  "RUNNING_COLOR",
+  "RUNNING_RED_BLUE",
+  "RUNNING_RANDOM",
+  "LARSON_SCANNER",
+  "COMET",
+  "FIREWORKS",
+  "FIREWORKS_RANDOM",
+  "MERRY_CHRISTMAS",
+  "FIRE_FLICKER",
+  "FIRE_FLICKER_SOFT",
+  "FIRE_FLICKER_INTENSE",
+  "CIRCUS_COMBUSTUS",
+  "HALLOWEEN",
+  "BICOLOR_CHASE",
+  "TRICOLOR_CHASE",
+  "TWINKLEFOX",
+  "RAIN",
+  "CUSTOM_0",
+  "CUSTOM_1",
+  "CUSTOM_2",
+  "CUSTOM_3",
+  "CUSTOM_4",
+  "CUSTOM_5",
+  "CUSTOM_6",
+  "CUSTOM_7"
+};
+
+                                                                       //brightness, speed, duration in millis 
+LEDController ledControllerSchwert(LED_COUNT_SCHWERT, LED_SCHWERT, FX_MODE_RAINBOW_CYCLE,   200,        200,   40000); // Adjust parameters as needed
+LEDController ledControllerKamm(LED_COUNT_KAMM, LED_KAMM, FX_MODE_RUNNING_LIGHTS,   200,        200,   40000); // Adjust parameters as needed
+LEDController ledControllerMain(LED_COUNT_MAIN, LED_MAIN, FX_MODE_RUNNING_COLOR,   100,        200,   40000); // Adjust parameters as needed
+void setup() {
+  ledControllerSchwert.init();
+  ledControllerSchwert.start();
+  ledControllerKamm.init();
+  ledControllerKamm.start();
+  ledControllerMain.init();
+  ledControllerMain.start();
+}
+
+void loop() {
+
+    unsigned long currentMillis = millis();  
+
+  if (currentMillis - previousMillis >= interval) {
+    previousMillis = currentMillis;
+
+    // Increment the mode, wrapping around when it exceeds the number of modes
+    currentMode++;
+    if (currentMode > FX_MODE_CUSTOM_7) {
+      currentMode = FX_MODE_STATIC;  // Wrap back to the first mode
+    }
+
+    // Set the new mode in WS2812FX library
+    ledControllerSchwert.setMode(currentMode);
+    ledControllerKamm.setMode(currentMode);
+    ledControllerMain.setMode(currentMode);
+
+    // Print the current mode name to the serial monitor
+    Serial.print("Current Mode: ");
+    Serial.println(modeNames[currentMode]);
+
+    ledControllerSchwert.stop();
+    ledControllerKamm.stop();
+    ledControllerMain.stop();
+    // Start the effect on the LED strip
+    ledControllerSchwert.start();
+    ledControllerKamm.start();
+    ledControllerMain.start();        
+  }
+
+    
+    ledControllerSchwert.service();
+    ledControllerKamm.service();
+    ledControllerMain.service();
+}
