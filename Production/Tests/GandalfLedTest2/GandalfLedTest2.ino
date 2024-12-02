@@ -12,7 +12,7 @@
 #define DEBUG_PRINTLN(x)
 #endif
 
-#define LED_COUNT_GANDALF 55
+#define LED_COUNT_GANDALF 50
 
 
 #define LED_GANDALF 7
@@ -33,6 +33,7 @@ void setup() {
     #ifdef DEBUG
         Serial.begin(9600);
     #endif
+        DEBUG_PRINT("Setup");
   ledControllerGandalf.init();
   ledControllerGandalf.start();
 }  
