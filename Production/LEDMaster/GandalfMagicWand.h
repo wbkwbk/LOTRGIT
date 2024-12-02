@@ -13,6 +13,7 @@ class GandalfMagicWand {
 
     // Call this method in the loop to update the lightning effect
     void update();
+    void setBalrogOpenState(boolean balrogstate);
 
   private:
     int _ledPin;           // LED pin number
@@ -21,6 +22,7 @@ class GandalfMagicWand {
     unsigned long _lastFlashMillis;  // Last time the LED was flashed
     bool _ledState;        // Current state of the LED (on or off)
     int _flashDuration;    // Duration for each flash
+    bool isBalrogOpen = false;    
 };
 
 #endif

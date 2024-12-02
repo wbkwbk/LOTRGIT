@@ -26,7 +26,7 @@ void GandalfMagicWand::update() {
   unsigned long currentMillis = millis();
 
   // If the flash duration has expired, turn off the LED and calculate the next flash duration
-  if (currentMillis - _lastFlashMillis >= _flashDuration) {
+  if (currentMillis - _lastFlashMillis >= _flashDuration || isBalrogOpen) {
     _ledState = !_ledState;  // Toggle LED state
     digitalWrite(_ledPin, _ledState ? HIGH : LOW);  // Set the LED state
 
@@ -36,4 +36,8 @@ void GandalfMagicWand::update() {
     // Update the last flash time
     _lastFlashMillis = currentMillis;
   }
+}
+
+void GandalfMagicWand::setBalrogOpenState(boolean balrogstate) {
+    isBalrogOpen = balrogstate;
 }

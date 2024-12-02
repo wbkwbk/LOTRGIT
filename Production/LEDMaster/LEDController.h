@@ -1,89 +1,28 @@
-/*
-
-#define FX_MODE_STATIC                   0
-#define FX_MODE_BLINK                    1
-#define FX_MODE_BREATH                   2
-#define FX_MODE_COLOR_WIPE               3
-#define FX_MODE_COLOR_WIPE_INV           4 
-#define FX_MODE_COLOR_WIPE_REV           5
-#define FX_MODE_COLOR_WIPE_REV_INV       6
-#define FX_MODE_COLOR_WIPE_RANDOM        7
-#define FX_MODE_RANDOM_COLOR             8
-#define FX_MODE_SINGLE_DYNAMIC           9
-#define FX_MODE_MULTI_DYNAMIC           10
-#define FX_MODE_RAINBOW                 11
-#define FX_MODE_RAINBOW_CYCLE           12
-#define FX_MODE_SCAN                    13
-#define FX_MODE_DUAL_SCAN               14
-#define FX_MODE_FADE                    15
-#define FX_MODE_THEATER_CHASE           16
-#define FX_MODE_THEATER_CHASE_RAINBOW   17
-#define FX_MODE_RUNNING_LIGHTS          18
-#define FX_MODE_TWINKLE                 19
-#define FX_MODE_TWINKLE_RANDOM          20
-#define FX_MODE_TWINKLE_FADE            21
-#define FX_MODE_TWINKLE_FADE_RANDOM     22
-#define FX_MODE_SPARKLE                 23
-#define FX_MODE_FLASH_SPARKLE           24
-#define FX_MODE_HYPER_SPARKLE           25
-#define FX_MODE_STROBE                  26
-#define FX_MODE_STROBE_RAINBOW          27
-#define FX_MODE_MULTI_STROBE            28
-#define FX_MODE_BLINK_RAINBOW           29
-#define FX_MODE_CHASE_WHITE             30
-#define FX_MODE_CHASE_COLOR             31
-#define FX_MODE_CHASE_RANDOM            32
-#define FX_MODE_CHASE_RAINBOW           33
-#define FX_MODE_CHASE_FLASH             34
-#define FX_MODE_CHASE_FLASH_RANDOM      35
-#define FX_MODE_CHASE_RAINBOW_WHITE     36
-#define FX_MODE_CHASE_BLACKOUT          37
-#define FX_MODE_CHASE_BLACKOUT_RAINBOW  38
-#define FX_MODE_COLOR_SWEEP_RANDOM      39
-#define FX_MODE_RUNNING_COLOR           40
-#define FX_MODE_RUNNING_RED_BLUE        41
-#define FX_MODE_RUNNING_RANDOM          42
-#define FX_MODE_LARSON_SCANNER          43
-#define FX_MODE_COMET                   44
-#define FX_MODE_FIREWORKS               45
-#define FX_MODE_FIREWORKS_RANDOM        46
-#define FX_MODE_MERRY_CHRISTMAS         47
-#define FX_MODE_FIRE_FLICKER            48
-#define FX_MODE_FIRE_FLICKER_SOFT       49
-#define FX_MODE_FIRE_FLICKER_INTENSE    50
-#define FX_MODE_CIRCUS_COMBUSTUS        51
-#define FX_MODE_HALLOWEEN               52
-#define FX_MODE_BICOLOR_CHASE           53
-#define FX_MODE_TRICOLOR_CHASE          54
-#define FX_MODE_TWINKLEFOX              55
-#define FX_MODE_RAIN                    56
-#define FX_MODE_CUSTOM                  57  // keep this for backward compatiblity
-#define FX_MODE_CUSTOM_0                57  // custom modes need to go at the end
-#define FX_MODE_CUSTOM_1                58
-#define FX_MODE_CUSTOM_2                59
-#define FX_MODE_CUSTOM_3                60
-#define FX_MODE_CUSTOM_4                61
-#define FX_MODE_CUSTOM_5                62
-#define FX_MODE_CUSTOM_6                63
-#define FX_MODE_CUSTOM_7                64
-
-*/
-
-#ifndef mainLedController_H
-#define mainLedController_H
+#ifndef LEDCONTROLLER_H
+#define LEDCONTROLLER_H
 
 #include <WS2812FX.h>
 
-class mainLedController {
+class LEDController {
 public:
-    mainLedController(uint16_t ledCount, uint8_t ledPin, uint8_t animMode, uint8_t brightness, uint16_t speed, uint16_t animRunDuration);
+    LEDController(uint16_t ledCount, uint8_t ledPin, uint8_t animMode, uint8_t brightness, uint16_t speed, uint16_t animRunDuration);
     void start();
+    void stop();
     void service();
     void init();
-    void stop();
-    void setBrightness(int brightness); 
+    void setBrightness(int brightness);
     void setSpeed(int speed);
     void setMode(int mode);
+    const char* getEffectName(int effect);
+    void setBalrogOpenState(boolean balrogstate);
+    
+    // Methods to get random effects
+    int getBalrogHitEffect();
+    int getBalrogOpenRampsEffect();
+    int getBalrogClosedRampsEffect();
+    int getBalrogOpenLeftOrbitEffect();
+    int getBalrogClosedLeftOrbitEffect();
+    int getBalrogClosedEffect();
 
 private:
     WS2812FX ws2812fx;
@@ -91,8 +30,36 @@ private:
     uint8_t brightness_;
     uint8_t mode_;
     uint16_t speed_;
-    unsigned  animStarttime;
+    unsigned long animStarttime;
     bool isAnimrunning;
+    bool isBalrogOpen = false;
+
+    static const int BALROGHIT_COUNT = 7;
+    static const int BALROGCLOSED_COUNT = 2;    
+    static const int BALROGOPENRAMPS_COUNT = 15;
+    static const int BALROGCLOSEDRAMPS_COUNT = 15;
+    static const int BALROGOPENLEFTORBIT_COUNT = 10;
+    static const int BALROGCLOSEDLEFTORBIT_COUNT = 10;
+
+    // Lists of effects
+    const int balrogHitEffects[BALROGHIT_COUNT] = {FX_MODE_BLINK , FX_MODE_STROBE , FX_MODE_MULTI_STROBE,FX_MODE_FIREWORKS , FX_MODE_FIRE_FLICKER , FX_MODE_FIRE_FLICKER_INTENSE , FX_MODE_TWINKLEFOX };
+    const int balrogClosedEffects[BALROGCLOSED_COUNT] = {FX_MODE_CHASE_FLASH , FX_MODE_CHASE_BLACKOUT};
+    const int balrogOpenRampsEffects[BALROGOPENRAMPS_COUNT] = {FX_MODE_BREATH , FX_MODE_COLOR_WIPE , FX_MODE_COLOR_WIPE_INV , FX_MODE_COLOR_WIPE_REV , FX_MODE_COLOR_WIPE_REV_INV ,FX_MODE_COLOR_WIPE_RANDOM ,FX_MODE_SCAN ,FX_MODE_DUAL_SCAN ,FX_MODE_FADE ,FX_MODE_RUNNING_LIGHTS ,FX_MODE_RUNNING_COLOR ,FX_MODE_LARSON_SCANNER ,FX_MODE_COMET ,FX_MODE_BICOLOR_CHASE ,FX_MODE_TRICOLOR_CHASE };
+    const int balrogClosedRampsEffects[BALROGCLOSEDRAMPS_COUNT] = {FX_MODE_BREATH , FX_MODE_COLOR_WIPE , FX_MODE_COLOR_WIPE_INV , FX_MODE_COLOR_WIPE_REV , FX_MODE_COLOR_WIPE_REV_INV ,FX_MODE_COLOR_WIPE_RANDOM ,FX_MODE_SCAN ,FX_MODE_DUAL_SCAN ,FX_MODE_FADE ,FX_MODE_RUNNING_LIGHTS ,FX_MODE_RUNNING_COLOR ,FX_MODE_LARSON_SCANNER ,FX_MODE_COMET ,FX_MODE_BICOLOR_CHASE ,FX_MODE_TRICOLOR_CHASE };
+    const int balrogOpenLeftOrbitEffects[BALROGOPENLEFTORBIT_COUNT] = {FX_MODE_RAINBOW , FX_MODE_RAINBOW_CYCLE ,FX_MODE_THEATER_CHASE ,FX_MODE_THEATER_CHASE_RAINBOW, FX_MODE_TWINKLE ,FX_MODE_FLASH_SPARKLE ,FX_MODE_CHASE_COLOR ,FX_MODE_CHASE_RAINBOW ,FX_MODE_COLOR_SWEEP_RANDOM ,FX_MODE_MERRY_CHRISTMAS };
+    const int balrogClosedLeftOrbitEffects[BALROGCLOSEDLEFTORBIT_COUNT] = {FX_MODE_RAINBOW , FX_MODE_RAINBOW_CYCLE ,FX_MODE_THEATER_CHASE ,FX_MODE_THEATER_CHASE_RAINBOW, FX_MODE_TWINKLE ,FX_MODE_FLASH_SPARKLE ,FX_MODE_CHASE_COLOR ,FX_MODE_CHASE_RAINBOW ,FX_MODE_COLOR_SWEEP_RANDOM ,FX_MODE_MERRY_CHRISTMAS };
+    
+    // Helper arrays to track which effects have been used
+    bool usedBalrogHit[BALROGHIT_COUNT] = {false, false, false, false, false, false, false};
+    bool usedBalrogClosed[BALROGCLOSED_COUNT] = {false, false};
+    bool usedBalrogOpenRamps[BALROGOPENRAMPS_COUNT] = {false, false, false, false, false, false, false, false, false, false, false, false, false, false, false};
+    bool usedBalrogClosedRamps[BALROGOPENRAMPS_COUNT] = {false, false, false, false, false, false, false, false, false, false, false, false, false, false, false};
+    bool usedBalrogOpenLeftOrbit[BALROGOPENLEFTORBIT_COUNT] = {false, false, false, false, false, false, false, false, false, false};
+    bool usedBalrogClosedLeftOrbit[BALROGOPENLEFTORBIT_COUNT] = {false, false, false, false, false, false, false, false, false, false};
+    
+    // Function to get a random effect from a list
+    int getRandomEffect(const int effects[], bool used[], int size);
+    void resetEffectUsage(bool used[], int size);
 
 };
 
