@@ -46,6 +46,9 @@ void LEDController::setBalrogOpenState(boolean balrogstate) {
 }
 
 void LEDController::stop() {
+  for (uint16_t i = 0; i < ws2812fx.numPixels(); i++) {
+    ws2812fx.setPixelColor(i, 0, 0, 0);
+}
     ws2812fx.stop();
 }
 

@@ -22,6 +22,7 @@ class GandalfMagicWand {
     unsigned long _lastFlashMillis;  // Last time the LED was flashed
     bool _ledState;        // Current state of the LED (on or off)
     int _flashDuration;    // Duration for each flash
+    int _pwmValue;
     bool isBalrogOpen = false;    
 };
 

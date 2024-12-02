@@ -7,6 +7,7 @@ GandalfMagicWand::GandalfMagicWand(int pin) {
   _ledState = LOW;           // Initially turn off the LED
   _lastFlashMillis = 0;      // Start the flashing timer at 0
   _flashDuration = 0;        // No flash duration initially
+  _pwmValue = 0;             // PWM value for LED (0 = off, 255 = max brightness)
 }
 
 // Method to start the lightning effect for a specified duration
@@ -18,17 +19,19 @@ void GandalfMagicWand::start(int duration) {
 // Non-blocking method to update the lightning effect
 void GandalfMagicWand::update() {
   // If the effect has been running for the specified duration, stop it
-  if (millis() - _startMillis >= _duration) {
+  if (millis() - _startMillis >= _duration && !isBalrogOpen) {
     return;
   }
 
   // Check if it's time to flash the LED
   unsigned long currentMillis = millis();
 
-  // If the flash duration has expired, turn off the LED and calculate the next flash duration
-  if (currentMillis - _lastFlashMillis >= _flashDuration || isBalrogOpen) {
-    _ledState = !_ledState;  // Toggle LED state
-    digitalWrite(_ledPin, _ledState ? HIGH : LOW);  // Set the LED state
+  // If the flash duration has expired, toggle the LED and calculate the next flash duration
+  if (currentMillis - _lastFlashMillis >= _flashDuration) {
+    _pwmValue = (_pwmValue == 0) ? 255 : 0; // Toggle between OFF (0) and a random brightness (128-255)
+    
+    // Set the PWM value for the LED using hardware PWM
+    analogWrite(_ledPin, _pwmValue);  // Set PWM on the LED pin
 
     // Set the new random flash duration (between 10ms and 100ms)
     _flashDuration = random(10, 100);
@@ -41,3 +44,4 @@ void GandalfMagicWand::update() {
 void GandalfMagicWand::setBalrogOpenState(boolean balrogstate) {
     isBalrogOpen = balrogstate;
 }
+
