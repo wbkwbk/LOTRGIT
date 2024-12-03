@@ -5,7 +5,7 @@
 #include <SD.h>
 #include "SoundFileManager.h" 
 
-#define DEBUG 1
+//#define DEBUG 1
 
 #ifdef DEBUG
 #define DEBUG_PRINT(x) Serial.print(x)
@@ -73,15 +73,7 @@ Adafruit_VS1053_FilePlayer musicPlayer =
   // create shield-example object!
   Adafruit_VS1053_FilePlayer(SHIELD_RESET, SHIELD_CS, SHIELD_DCS, DREQ, CARDCS);
 
-//# Liste aller Sounddateien
-const char* soundFiles[] = {
-"AWINL.mp3",
-"CWMML.mp3",
-"FOAT.mp3",
-"MIIJY.mp3",
-"PFB.mp3",
-"TINBOT.mp3"
-}; 
+
 
 SoundFileManager soundFileManager;
 

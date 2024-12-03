@@ -10,7 +10,7 @@
 
 
 
-#define DEBUG 1
+//#define DEBUG 1
 
 #ifdef DEBUG
 #define DEBUG_PRINT(x) Serial.print(x)
@@ -85,7 +85,9 @@ void setup() {
   pinMode(LeftOrbitLowP5, INPUT);
   pinMode(balrogOpenP2_31, INPUT);
   pinMode(balrogClosedP1_32, INPUT);
-  Serial.begin(9600);
+    #ifdef DEBUG
+        Serial.begin(9600);
+    #endif
   attachInterrupt(digitalPinToInterrupt(MatrixColumnP5Pin), P5_InterruptRoutine, FALLING);
   attachInterrupt(digitalPinToInterrupt(MatrixColumnP6Pin), P6_InterruptRoutine, FALLING);
 

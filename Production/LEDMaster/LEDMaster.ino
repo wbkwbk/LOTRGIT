@@ -2,7 +2,7 @@
 #include <SoftwareSerial.h>
 #include "GandalfMagicWand.h"
 
-#define DEBUG 1
+//#define DEBUG 1
 
 #ifdef DEBUG
 #define DEBUG_PRINT(x) Serial.print(x)
