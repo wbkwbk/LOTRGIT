@@ -23,16 +23,17 @@
 #define BALROGCLOSED 5
 #define LEFTORBITLOW 6
 
-#define GANDALFWANDPINPIN 5
 #define GANDALFFLASHINGDURATION 5000
 
 #define LED_COUNT_SCHWERT 65
 #define LED_COUNT_KAMM 63
 #define LED_COUNT_MAIN 70
+#define LED_COUNT_GANDALF_MAGIC_WAND 50
 
 #define LED_SCHWERT 6
 #define LED_KAMM 7
 #define LED_MAIN 4
+#define LED_MAGIC_WAND 5
 #define LEDANIMBRIGHTNESSMAIN 200
 #define LEDANIMBRIGHTNESKAMMUNDSCHWERT 200
 #define LEDANIMSPEED 200
@@ -43,6 +44,8 @@
 LEDController ledControllerSchwert(LED_COUNT_SCHWERT, LED_SCHWERT, FX_MODE_RAINBOW_CYCLE,   LEDANIMBRIGHTNESKAMMUNDSCHWERT,        LEDANIMSPEED,   LEDANIMDURATION);
 LEDController ledControllerKamm(LED_COUNT_KAMM, LED_KAMM, FX_MODE_RUNNING_LIGHTS,   LEDANIMBRIGHTNESKAMMUNDSCHWERT,        LEDANIMSPEED,   LEDANIMDURATION);
 LEDController ledControllerMain(LED_COUNT_MAIN, LED_MAIN, FX_MODE_RUNNING_COLOR,   LEDANIMBRIGHTNESSMAIN,        LEDANIMSPEED,   LEDANIMDURATION);
+LEDController ledControllerGandalfMagicWand(LED_COUNT_GANDALF_MAGIC_WAND, LED_MAGIC_WAND, FX_MODE_RUNNING_COLOR,   LEDANIMBRIGHTNESSMAIN,        LEDANIMSPEED,   LEDANIMDURATION);
+
 
 //Communication
 #define RXPINTOSOUNDMASTER 8 //connect  the Sound Sending TXPIN
@@ -52,8 +55,6 @@ LEDController ledControllerMain(LED_COUNT_MAIN, LED_MAIN, FX_MODE_RUNNING_COLOR,
 SoftwareSerial switchNumberReceiver(RXPINTOSOUNDMASTER, TXPINTOSOUNDMASTER); // RX, TX
 
 
-
-GandalfMagicWand gandalfwand(GANDALFWANDPINPIN);
 
 //int switchnumber;
 volatile boolean balrogClosed = false;
@@ -70,6 +71,7 @@ void setup() {
     ledControllerSchwert.init();
     ledControllerKamm.init();
     ledControllerMain.init();
+    ledControllerGandalfMagicWand.init();
 }
 
 
@@ -80,7 +82,7 @@ void loop() {
         switch(switchnumber){
           case BALROGHIT:
             DEBUG_PRINTLN("EffectController::Balrog Hit");
-            gandalfwand.start(GANDALFFLASHINGDURATION);
+            ledControllerGandalfMagicWand.setMode(ledControllerGandalfMagicWand.getgandalfMagicWandEffect());
             ledControllerSchwert.setMode(ledControllerSchwert.getBalrogHitEffect());
             ledControllerKamm.setMode(ledControllerKamm.getBalrogHitEffect());
             ledControllerMain.setMode(ledControllerMain.getBalrogHitEffect());             
@@ -97,7 +99,7 @@ void loop() {
                 ledControllerKamm.setMode(ledControllerKamm.getBalrogClosedRampsEffect());
                 ledControllerMain.setMode(ledControllerMain.getBalrogClosedRampsEffect());   
               }
-              gandalfwand.start(GANDALFFLASHINGDURATION);
+            ledControllerGandalfMagicWand.setMode(ledControllerGandalfMagicWand.getgandalfMagicWandEffect());
           break;
           case RIGHTRAMPENTER:
             DEBUG_PRINTLN("EffectController::Right Ramp Entered");  
@@ -110,7 +112,7 @@ void loop() {
                 ledControllerKamm.setMode(ledControllerKamm.getBalrogClosedRampsEffect());
                 ledControllerMain.setMode(ledControllerMain.getBalrogClosedRampsEffect());   
               }
-              gandalfwand.start(GANDALFFLASHINGDURATION);            
+            ledControllerGandalfMagicWand.setMode(ledControllerGandalfMagicWand.getgandalfMagicWandEffect());
           break;
           case BALROGOPEN:
             DEBUG_PRINTLN("EffectController::Balrog Open");               
@@ -119,7 +121,7 @@ void loop() {
             ledControllerSchwert.setBalrogOpenState(balrogOpen);
             ledControllerKamm.setBalrogOpenState(balrogOpen);
             ledControllerMain.setBalrogOpenState(balrogOpen);
-            gandalfwand.setBalrogOpenState(balrogOpen);
+            ledControllerGandalfMagicWand.setBalrogOpenState(balrogOpen);
           break;
           case BALROGCLOSED:
             DEBUG_PRINTLN("EffectController::Balrog Closed");                         
@@ -128,7 +130,7 @@ void loop() {
             ledControllerSchwert.setBalrogOpenState(balrogOpen);
             ledControllerKamm.setBalrogOpenState(balrogOpen);
             ledControllerMain.setBalrogOpenState(balrogOpen);
-            gandalfwand.setBalrogOpenState(balrogOpen);
+            ledControllerGandalfMagicWand.setBalrogOpenState(balrogOpen);
             ledControllerSchwert.setMode(ledControllerSchwert.getBalrogClosedEffect());
             ledControllerKamm.setMode(ledControllerKamm.getBalrogClosedEffect());
             ledControllerMain.setMode(ledControllerMain.getBalrogClosedEffect());             
@@ -150,7 +152,7 @@ void loop() {
     ledControllerSchwert.service();
     ledControllerKamm.service();
     ledControllerMain.service();
-    gandalfwand.update();
+    ledControllerGandalfMagicWand.service();
 }        
 
 //Hack for arduion uno r4 - not used at the moment, instead

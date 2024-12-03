@@ -96,6 +96,10 @@ void LEDController::resetEffectUsage(bool used[], int size) {
 }
 
 // Methods to get a random effect from each list
+int LEDController::getgandalfMagicWandEffect() {
+    return getRandomEffect(gandalfMagicWandEffect, usedGandalfMagicWand, GANDALFMAGICWANTEFFECT_COUNT);
+}
+
 int LEDController::getBalrogHitEffect() {
     return getRandomEffect(balrogHitEffects, usedBalrogHit, BALROGHIT_COUNT);
 }

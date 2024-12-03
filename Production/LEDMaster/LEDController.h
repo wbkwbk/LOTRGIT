@@ -17,6 +17,7 @@ public:
     void setBalrogOpenState(boolean balrogstate);
     
     // Methods to get random effects
+    int getgandalfMagicWandEffect();
     int getBalrogHitEffect();
     int getBalrogOpenRampsEffect();
     int getBalrogClosedRampsEffect();
@@ -41,7 +42,10 @@ private:
     static const int BALROGOPENLEFTORBIT_COUNT = 10;
     static const int BALROGCLOSEDLEFTORBIT_COUNT = 10;
 
+    static const int GANDALFMAGICWANTEFFECT_COUNT = 1;
+
     // Lists of effects
+    const int gandalfMagicWandEffect[GANDALFMAGICWANTEFFECT_COUNT] = {FX_MODE_RAINBOW};
     const int balrogHitEffects[BALROGHIT_COUNT] = {FX_MODE_BLINK , FX_MODE_STROBE , FX_MODE_MULTI_STROBE,FX_MODE_FIREWORKS , FX_MODE_FIRE_FLICKER , FX_MODE_FIRE_FLICKER_INTENSE , FX_MODE_TWINKLEFOX };
     const int balrogClosedEffects[BALROGCLOSED_COUNT] = {FX_MODE_CHASE_FLASH , FX_MODE_CHASE_BLACKOUT};
     const int balrogOpenRampsEffects[BALROGOPENRAMPS_COUNT] = {FX_MODE_BREATH , FX_MODE_COLOR_WIPE , FX_MODE_COLOR_WIPE_INV , FX_MODE_COLOR_WIPE_REV , FX_MODE_COLOR_WIPE_REV_INV ,FX_MODE_COLOR_WIPE_RANDOM ,FX_MODE_SCAN ,FX_MODE_DUAL_SCAN ,FX_MODE_FADE ,FX_MODE_RUNNING_LIGHTS ,FX_MODE_RUNNING_COLOR ,FX_MODE_LARSON_SCANNER ,FX_MODE_COMET ,FX_MODE_BICOLOR_CHASE ,FX_MODE_TRICOLOR_CHASE };
@@ -50,6 +54,7 @@ private:
     const int balrogClosedLeftOrbitEffects[BALROGCLOSEDLEFTORBIT_COUNT] = {FX_MODE_RAINBOW , FX_MODE_RAINBOW_CYCLE ,FX_MODE_THEATER_CHASE ,FX_MODE_THEATER_CHASE_RAINBOW, FX_MODE_TWINKLE ,FX_MODE_FLASH_SPARKLE ,FX_MODE_CHASE_COLOR ,FX_MODE_CHASE_RAINBOW ,FX_MODE_COLOR_SWEEP_RANDOM ,FX_MODE_MERRY_CHRISTMAS };
     
     // Helper arrays to track which effects have been used
+    bool usedGandalfMagicWand[GANDALFMAGICWANTEFFECT_COUNT] = {false};
     bool usedBalrogHit[BALROGHIT_COUNT] = {false, false, false, false, false, false, false};
     bool usedBalrogClosed[BALROGCLOSED_COUNT] = {false, false};
     bool usedBalrogOpenRamps[BALROGOPENRAMPS_COUNT] = {false, false, false, false, false, false, false, false, false, false, false, false, false, false, false};
