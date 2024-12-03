@@ -82,7 +82,7 @@ void loop() {
         switch(switchnumber){
           case BALROGHIT:
             DEBUG_PRINTLN("EffectController::Balrog Hit");
-            ledControllerGandalfMagicWand.setMode(ledControllerGandalfMagicWand.getgandalfMagicWandEffect());
+            ledControllerGandalfMagicWand.setMode(ledControllerGandalfMagicWand.getGandalfBalrogHitEffect());
             ledControllerSchwert.setMode(ledControllerSchwert.getBalrogHitEffect());
             ledControllerKamm.setMode(ledControllerKamm.getBalrogHitEffect());
             ledControllerMain.setMode(ledControllerMain.getBalrogHitEffect());             
@@ -99,7 +99,7 @@ void loop() {
                 ledControllerKamm.setMode(ledControllerKamm.getBalrogClosedRampsEffect());
                 ledControllerMain.setMode(ledControllerMain.getBalrogClosedRampsEffect());   
               }
-            ledControllerGandalfMagicWand.setMode(ledControllerGandalfMagicWand.getgandalfMagicWandEffect());
+            ledControllerGandalfMagicWand.setMode(ledControllerGandalfMagicWand.getGandalfRampsEffect());
           break;
           case RIGHTRAMPENTER:
             DEBUG_PRINTLN("EffectController::Right Ramp Entered");  
@@ -112,7 +112,7 @@ void loop() {
                 ledControllerKamm.setMode(ledControllerKamm.getBalrogClosedRampsEffect());
                 ledControllerMain.setMode(ledControllerMain.getBalrogClosedRampsEffect());   
               }
-            ledControllerGandalfMagicWand.setMode(ledControllerGandalfMagicWand.getgandalfMagicWandEffect());
+            ledControllerGandalfMagicWand.setMode(ledControllerGandalfMagicWand.getGandalfRampsEffect());
           break;
           case BALROGOPEN:
             DEBUG_PRINTLN("EffectController::Balrog Open");               
@@ -145,7 +145,8 @@ void loop() {
                 ledControllerSchwert.setMode(ledControllerSchwert.getBalrogClosedLeftOrbitEffect());
                 ledControllerKamm.setMode(ledControllerKamm.getBalrogClosedLeftOrbitEffect());
                 ledControllerMain.setMode(ledControllerMain.getBalrogClosedLeftOrbitEffect());   
-              }           
+              }                        
+              ledControllerGandalfMagicWand.setMode(ledControllerGandalfMagicWand.getGandalfLeftOrbitEffect());               
           break;          
         }  
     }
