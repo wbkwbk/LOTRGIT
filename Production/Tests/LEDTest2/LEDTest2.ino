@@ -67,7 +67,7 @@ const int gModes[gModeCount] = {
 
 };
 
-const char* gModeNames[] PROGMEM = {
+const char* gModeNames[gModeCount] {
 "   FX_MODE_STATIC              "    ,
 "   FX_MODE_BLINK               "    ,
 " FX_MODE_BREATH                "  ,
