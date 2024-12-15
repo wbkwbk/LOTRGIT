@@ -7,15 +7,17 @@ class LEDController {
 public:
     LEDController(uint16_t ledCount, uint8_t ledPin, uint8_t animMode, uint8_t brightness, uint16_t speed, uint16_t animRunDuration);
     void start();
+    void start(uint16_t animduration);
     void stop();
     void service();
     void init();
     void setBrightness(int brightness);
     void setSpeed(int speed);
     void setMode(int mode);
+    void setMode(int mode, uint16_t animduration);
     const char* getEffectName(int effect);
     void setBalrogOpenState(boolean balrogstate);
-    
+
     // Methods to get random effects
     int getBalrogHitEffect();
     int getGandalfBalrogHitEffect();

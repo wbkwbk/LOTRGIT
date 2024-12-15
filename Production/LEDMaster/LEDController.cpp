@@ -22,6 +22,12 @@ void LEDController::start() {
     isAnimrunning = true;
 }
 
+void LEDController::start(uint16_t animduration){
+  animRunDuration_ = animduration;
+  start();
+}
+
+
 void LEDController::setBrightness(int brightness) {
     brightness_ = brightness;
     ws2812fx.setBrightness(brightness_);
@@ -39,6 +45,11 @@ void LEDController::setMode(int mode) {
     ws2812fx.setMode(mode_);
     start();
 
+}
+
+void LEDController::setMode(int mode, uint16_t animduration){
+  animRunDuration_ = animduration;
+  setMode(mode);  
 }
 
 void LEDController::setBalrogOpenState(boolean balrogstate) {
