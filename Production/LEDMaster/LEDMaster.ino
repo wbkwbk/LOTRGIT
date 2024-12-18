@@ -135,6 +135,10 @@ void loop() {
             ledControllerKamm.setBalrogOpenState(balrogOpen);
             ledControllerMain.setBalrogOpenState(balrogOpen);
             ledControllerGandalfMagicWand.setBalrogOpenState(balrogOpen);
+            //added December 18
+            ledControllerSchwert.setMode(ledControllerSchwert.getBalrogOpenRampsEffect(),getAnimDuration());
+            ledControllerKamm.setMode(ledControllerKamm.getBalrogOpenRampsEffect(),getAnimDuration());
+            ledControllerMain.setMode(ledControllerMain.getBalrogOpenRampsEffect(),getAnimDuration());             
           break;
           case BALROGCLOSED:
             DEBUG_PRINTLN("EffectController::Balrog Closed");                         

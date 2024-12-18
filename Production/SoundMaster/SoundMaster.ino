@@ -154,9 +154,13 @@ void loop() {
           break;
           case BALROGOPEN:
             DEBUG_PRINTLN("EffectController::Balrog Open");  
-            switchSender.write(BALROGOPEN);            
+            switchSender.write(BALROGOPEN);       
             balrogClosed = false;
-            balrogOpen = true;
+            balrogOpen = true;  
+            //added December 18          
+            if(!musicPlayer.playingMusic){
+              musicPlayer.startPlayingFile(soundFileManager.getBalrogClosedRampsEffect());                  
+            }                 
           break;
           case BALROGCLOSED:
             DEBUG_PRINTLN("EffectController::Balrog Closed");  
