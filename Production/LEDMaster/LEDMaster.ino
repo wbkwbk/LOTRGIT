@@ -91,41 +91,43 @@ void setup() {
 void loop() {
     // Check for incoming serial data
     if (switchNumberReceiver.available() > 0) {
+        int animduration = getAnimduration();
+
         int switchnumber = switchNumberReceiver.read();
         switch(switchnumber){
           case BALROGHIT:
             DEBUG_PRINTLN("EffectController::Balrog Hit");
-            ledControllerGandalfMagicWand.setMode(ledControllerGandalfMagicWand.getGandalfBalrogHitEffect(),getAnimDuration());
-            ledControllerSchwert.setMode(ledControllerSchwert.getBalrogHitEffect(),getAnimDuration());
-            ledControllerKamm.setMode(ledControllerKamm.getBalrogHitEffect(),getAnimDuration());
-            ledControllerMain.setMode(ledControllerMain.getBalrogHitEffect(),getAnimDuration());             
+            ledControllerGandalfMagicWand.setMode(ledControllerGandalfMagicWand.getGandalfBalrogHitEffect(),animduration);
+            ledControllerSchwert.setMode(ledControllerSchwert.getBalrogHitEffect(),animduration);
+            ledControllerKamm.setMode(ledControllerKamm.getBalrogHitEffect(),animduration);
+            ledControllerMain.setMode(ledControllerMain.getBalrogHitEffect(),animduration);             
 
           break;
           case LEFTRAMPMADE:
               DEBUG_PRINTLN("EffectController::Left Ramp Made");
               if(balrogOpen){
-                ledControllerSchwert.setMode(ledControllerSchwert.getBalrogOpenRampsEffect(),getAnimDuration());
-                ledControllerKamm.setMode(ledControllerKamm.getBalrogOpenRampsEffect(),getAnimDuration());
-                ledControllerMain.setMode(ledControllerMain.getBalrogOpenRampsEffect(),getAnimDuration());   
+                ledControllerSchwert.setMode(ledControllerSchwert.getBalrogOpenRampsEffect(),animduration);
+                ledControllerKamm.setMode(ledControllerKamm.getBalrogOpenRampsEffect(),animduration);
+                ledControllerMain.setMode(ledControllerMain.getBalrogOpenRampsEffect(),animduration);   
               }else{
-                ledControllerSchwert.setMode(ledControllerSchwert.getBalrogClosedRampsEffect()),getAnimDuration();
-                ledControllerKamm.setMode(ledControllerKamm.getBalrogClosedRampsEffect(),getAnimDuration());
-                ledControllerMain.setMode(ledControllerMain.getBalrogClosedRampsEffect(),getAnimDuration());   
+                ledControllerSchwert.setMode(ledControllerSchwert.getBalrogClosedRampsEffect()),animduration;
+                ledControllerKamm.setMode(ledControllerKamm.getBalrogClosedRampsEffect(),animduration);
+                ledControllerMain.setMode(ledControllerMain.getBalrogClosedRampsEffect(),animduration);   
               }
-            ledControllerGandalfMagicWand.setMode(ledControllerGandalfMagicWand.getGandalfRampsEffect(),getAnimDuration());
+            ledControllerGandalfMagicWand.setMode(ledControllerGandalfMagicWand.getGandalfRampsEffect(),animduration);
           break;
           case RIGHTRAMPENTER:
             DEBUG_PRINTLN("EffectController::Right Ramp Entered");  
               if(balrogOpen){
-                ledControllerSchwert.setMode(ledControllerSchwert.getBalrogOpenRampsEffect(),getAnimDuration());
-                ledControllerKamm.setMode(ledControllerKamm.getBalrogOpenRampsEffect(),getAnimDuration());
-                ledControllerMain.setMode(ledControllerMain.getBalrogOpenRampsEffect(),getAnimDuration());   
+                ledControllerSchwert.setMode(ledControllerSchwert.getBalrogOpenRampsEffect(),animduration);
+                ledControllerKamm.setMode(ledControllerKamm.getBalrogOpenRampsEffect(),animduration);
+                ledControllerMain.setMode(ledControllerMain.getBalrogOpenRampsEffect(),animduration);   
               }else{
-                ledControllerSchwert.setMode(ledControllerSchwert.getBalrogClosedRampsEffect(),getAnimDuration());
-                ledControllerKamm.setMode(ledControllerKamm.getBalrogClosedRampsEffect(),getAnimDuration());
-                ledControllerMain.setMode(ledControllerMain.getBalrogClosedRampsEffect(),getAnimDuration());   
+                ledControllerSchwert.setMode(ledControllerSchwert.getBalrogClosedRampsEffect(),animduration);
+                ledControllerKamm.setMode(ledControllerKamm.getBalrogClosedRampsEffect(),animduration);
+                ledControllerMain.setMode(ledControllerMain.getBalrogClosedRampsEffect(),animduration);   
               }
-            ledControllerGandalfMagicWand.setMode(ledControllerGandalfMagicWand.getGandalfRampsEffect(),getAnimDuration());
+            ledControllerGandalfMagicWand.setMode(ledControllerGandalfMagicWand.getGandalfRampsEffect(),animduration);
           break;
           case BALROGOPEN:
             DEBUG_PRINTLN("EffectController::Balrog Open");               
@@ -136,9 +138,9 @@ void loop() {
             ledControllerMain.setBalrogOpenState(balrogOpen);
             ledControllerGandalfMagicWand.setBalrogOpenState(balrogOpen);
             //added December 18
-            ledControllerSchwert.setMode(ledControllerSchwert.getBalrogOpenRampsEffect(),getAnimDuration());
-            ledControllerKamm.setMode(ledControllerKamm.getBalrogOpenRampsEffect(),getAnimDuration());
-            ledControllerMain.setMode(ledControllerMain.getBalrogOpenRampsEffect(),getAnimDuration());             
+            ledControllerSchwert.setMode(ledControllerSchwert.getBalrogOpenRampsEffect(),animduration);
+            ledControllerKamm.setMode(ledControllerKamm.getBalrogOpenRampsEffect(),animduration);
+            ledControllerMain.setMode(ledControllerMain.getBalrogOpenRampsEffect(),animduration);             
           break;
           case BALROGCLOSED:
             DEBUG_PRINTLN("EffectController::Balrog Closed");                         
@@ -148,22 +150,22 @@ void loop() {
             ledControllerKamm.setBalrogOpenState(balrogOpen);
             ledControllerMain.setBalrogOpenState(balrogOpen);
             ledControllerGandalfMagicWand.setBalrogOpenState(balrogOpen);
-            ledControllerSchwert.setMode(ledControllerSchwert.getBalrogClosedEffect(),getAnimDuration());
-            ledControllerKamm.setMode(ledControllerKamm.getBalrogClosedEffect(),getAnimDuration());
-            ledControllerMain.setMode(ledControllerMain.getBalrogClosedEffect(),getAnimDuration());             
+            ledControllerSchwert.setMode(ledControllerSchwert.getBalrogClosedEffect(),animduration);
+            ledControllerKamm.setMode(ledControllerKamm.getBalrogClosedEffect(),animduration);
+            ledControllerMain.setMode(ledControllerMain.getBalrogClosedEffect(),animduration);             
           break;
           case LEFTORBITLOW:
             DEBUG_PRINTLN("EffectController::Left Orbit Low");            
               if(balrogOpen){
-                ledControllerSchwert.setMode(ledControllerSchwert.getBalrogOpenLeftOrbitEffect(),getAnimDuration());
-                ledControllerKamm.setMode(ledControllerKamm.getBalrogOpenLeftOrbitEffect(),getAnimDuration());
-                ledControllerMain.setMode(ledControllerMain.getBalrogOpenLeftOrbitEffect(),getAnimDuration());   
+                ledControllerSchwert.setMode(ledControllerSchwert.getBalrogOpenLeftOrbitEffect(),animduration);
+                ledControllerKamm.setMode(ledControllerKamm.getBalrogOpenLeftOrbitEffect(),animduration);
+                ledControllerMain.setMode(ledControllerMain.getBalrogOpenLeftOrbitEffect(),animduration);   
               }else{
-                ledControllerSchwert.setMode(ledControllerSchwert.getBalrogClosedLeftOrbitEffect(),getAnimDuration());
-                ledControllerKamm.setMode(ledControllerKamm.getBalrogClosedLeftOrbitEffect(),getAnimDuration());
-                ledControllerMain.setMode(ledControllerMain.getBalrogClosedLeftOrbitEffect(),getAnimDuration());   
+                ledControllerSchwert.setMode(ledControllerSchwert.getBalrogClosedLeftOrbitEffect(),animduration);
+                ledControllerKamm.setMode(ledControllerKamm.getBalrogClosedLeftOrbitEffect(),animduration);
+                ledControllerMain.setMode(ledControllerMain.getBalrogClosedLeftOrbitEffect(),animduration);   
               }                        
-              ledControllerGandalfMagicWand.setMode(ledControllerGandalfMagicWand.getGandalfLeftOrbitEffect(),getAnimDuration());               
+              ledControllerGandalfMagicWand.setMode(ledControllerGandalfMagicWand.getGandalfLeftOrbitEffect(),animduration);               
           break;          
         }  
     }
@@ -192,7 +194,7 @@ void ardSerialInitPatch( void )
     }
 }
 
-int getAnimDuration() {
+int getAnimduration() {
   // If all values are used, reset the tracking array
   if (usedCount >= arraySize) {
     for (int i = 0; i < arraySize; i++) {
