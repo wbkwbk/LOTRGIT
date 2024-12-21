@@ -138,6 +138,7 @@ void loop() {
             ledControllerMain.setBalrogOpenState(balrogOpen);
             ledControllerGandalfMagicWand.setBalrogOpenState(balrogOpen);
             //added December 18
+            ledControllerGandalfMagicWand.setMode(ledControllerGandalfMagicWand.getBalrogOpenRampsEffect(),animduration);
             ledControllerSchwert.setMode(ledControllerSchwert.getBalrogOpenRampsEffect(),animduration);
             ledControllerKamm.setMode(ledControllerKamm.getBalrogOpenRampsEffect(),animduration);
             ledControllerMain.setMode(ledControllerMain.getBalrogOpenRampsEffect(),animduration);             
@@ -150,6 +151,7 @@ void loop() {
             ledControllerKamm.setBalrogOpenState(balrogOpen);
             ledControllerMain.setBalrogOpenState(balrogOpen);
             ledControllerGandalfMagicWand.setBalrogOpenState(balrogOpen);
+            ledControllerGandalfMagicWand.setMode(ledControllerGandalfMagicWand.getBalrogClosedEffect(),animduration);
             ledControllerSchwert.setMode(ledControllerSchwert.getBalrogClosedEffect(),animduration);
             ledControllerKamm.setMode(ledControllerKamm.getBalrogClosedEffect(),animduration);
             ledControllerMain.setMode(ledControllerMain.getBalrogClosedEffect(),animduration);             
