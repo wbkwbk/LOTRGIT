@@ -1,0 +1,5 @@
+# Ignore the build directory
+Production/LEDMaster/build/
+
+# Ignore the .vscode directory
+Production/LEDMaster/.vscode/
