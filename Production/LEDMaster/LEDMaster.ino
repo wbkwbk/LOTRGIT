@@ -2,6 +2,7 @@
 #include <SoftwareSerial.h>
 
 
+
 //#define DEBUG 1
 
 #ifdef DEBUG
@@ -74,13 +75,13 @@ volatile boolean balrogOpen = false;
 void setup() {
   // Seed the random number generator with an analog pin
   randomSeed(analogRead(A0));
-
+    //switchNumberReceiver.begin(TRXBAUDRATE);
   ardSerialInitPatch();
 
     #ifdef DEBUG
         Serial.begin(9600);
     #endif
-    switchNumberReceiver.begin(TRXBAUDRATE);
+
     ledControllerSchwert.init();
     ledControllerKamm.init();
     ledControllerMain.init();
@@ -179,12 +180,12 @@ void ardSerialInitPatch( void )
         do_once = false;
         uint32_t start_time = millis();
         //Setup the baud rate
-        switchNumberReceiver.begin( 115200 );
+        switchNumberReceiver.begin( TRXBAUDRATE );
         while( !Serial && (millis() - start_time) < 5000 )
         {
             ; // wait for serial port to connect. Needed for native USB
         }
-        Serial.println(F("!"));
+        DEBUG_PRINTLN("switchNumberReceiver::Initialized");
     }
 }
 
@@ -194,7 +195,8 @@ int getAnimduration() {
     for (int i = 0; i < arraySize; i++) {
       used[i] = false;
     }
-    usedCount = 0;
+    
+    
   }
 
   int randomIndex;
