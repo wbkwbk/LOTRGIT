@@ -1,6 +1,6 @@
 #include "LEDController.h"
 #include <SoftwareSerial.h>
-#include "GandalfMagicWand.h"
+
 
 //#define DEBUG 1
 
@@ -179,7 +179,7 @@ void ardSerialInitPatch( void )
         do_once = false;
         uint32_t start_time = millis();
         //Setup the baud rate
-        Serial.begin( 115200 );
+        switchNumberReceiver.begin( 115200 );
         while( !Serial && (millis() - start_time) < 5000 )
         {
             ; // wait for serial port to connect. Needed for native USB

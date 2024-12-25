@@ -1,7 +1,8 @@
 #include "LEDController.h"
 
+
 LEDController::LEDController(uint16_t ledCount, uint8_t ledPin, uint8_t animMode, uint8_t brightness, uint16_t speed, uint16_t animRunDuration) :
-    ws2812fx(ledCount, ledPin, NEO_GRB + NEO_KHZ800),
+    ws2812fx(ledCount, ledPin, neoPixelType(NEO_GRB + NEO_KHZ800)),
     animRunDuration_(animRunDuration),
     brightness_(brightness),
     mode_(animMode),
