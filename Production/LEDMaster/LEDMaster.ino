@@ -195,7 +195,7 @@ int getAnimduration() {
     for (int i = 0; i < arraySize; i++) {
       used[i] = false;
     }
-    
+    usedCount = 0;
     
   }
 
