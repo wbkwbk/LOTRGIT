@@ -180,8 +180,7 @@ void ardSerialInitPatch( void )
         uint32_t start_time = millis();
         //Setup the baud rate
         switchNumberReceiver.begin( TRXBAUDRATE );
-        while( !Serial && (millis() - start_time) < 5000 )
-        {
+        while( !Serial && (millis() - start_time) < 5000 ){
             ; // wait for serial port to connect. Needed for native USB
         }
         DEBUG_PRINTLN("switchNumberReceiver::Initialized");
