@@ -75,7 +75,6 @@ volatile boolean balrogOpen = false;
 void setup() {
   // Seed the random number generator with an analog pin
   randomSeed(analogRead(A0));
-    //switchNumberReceiver.begin(TRXBAUDRATE);
   ardSerialInitPatch();
 
     #ifdef DEBUG
