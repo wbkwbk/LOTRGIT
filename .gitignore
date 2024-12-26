@@ -6,3 +6,6 @@ Production/LEDMaster/.vscode/
 
 # Ignore the .vscode build
 Production/LEDMaster/build/
+
+# Ignore the .vscode build
+.metadata
