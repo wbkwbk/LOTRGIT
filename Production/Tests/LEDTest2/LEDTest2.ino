@@ -141,7 +141,7 @@ void loop() {
   ws2812fx.service();
 
   // Change the effect every 5 seconds
-  const unsigned long interval = 10000; // 5 seconds in milliseconds
+  const unsigned long interval = 5000; // 5 seconds in milliseconds
   static unsigned long lastChangeTime = 0;
 
   if (millis() - lastChangeTime >= interval) {

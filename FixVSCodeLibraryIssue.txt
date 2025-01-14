@@ -1,0 +1,3 @@
+Change the value "C:\\Users\\wbk\\AppData\\Local\\Arduino15\\packages\\arduino\\hardware\\renesas_uno\\1.3.2\\variants\\MINIMA",
+to 
+"C:\\Users\\wbk\\AppData\\Local\\Arduino15\\packages\\arduino\\hardware\\renesas_uno\\1.3.2\\variants\\MINIMA\\**",

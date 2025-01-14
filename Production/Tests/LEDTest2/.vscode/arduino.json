@@ -1,0 +1,5 @@
+{
+    "port": "COM4",
+    "board": "arduino:renesas_uno:minima",
+    "sketch": "LEDTest2.ino"
+}
