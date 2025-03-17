@@ -22,8 +22,8 @@
 #define DEBUG_PRINTLN(x)
 #endif
 
-#define RXPINTOEFFECTSMASTER 10 //10 for MEGA connect to Effectscontroller RXPIN
-#define TXPINTOEFFECTSMASTER 11 //11 for MEGA connect to Effects controller TXPIN
+#define RXPINTOSOUNDMASTER 10 //10 for MEGA connect to Effectscontroller RXPIN
+#define TXPINTOSOUNDMASTER 11 //11 for MEGA connect to Effects controller TXPIN
 #define TRXBAUDRATE 38400
 
 #define BALROGHIT 1
@@ -70,7 +70,7 @@ boolean lastLeftOrbitMadeState = false;
 volatile unsigned long lastDebounceTimeRightRampEnter = 0;
 boolean lastRightRampMadeState = false;
 
-SoftwareSerial switchSender(RXPINTOEFFECTSMASTER, TXPINTOEFFECTSMASTER); // RX, TX
+SoftwareSerial switchSender(RXPINTOSOUNDMASTER, TXPINTOSOUNDMASTER); // RX, TX
 
 
 
