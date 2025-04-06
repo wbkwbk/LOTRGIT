@@ -4,7 +4,7 @@
 #include "FastLED.h"
 
 // Definiere die Konstanten
-#define LED_DT 5         // Data Pin für den Strip
+#define LED_DT 6         // Data Pin für den Strip
 //#define LED_CK 11         // Clock Pin für den Strip
 #define COLOR_ORDER BGR   // Farborder
 #define LED_TYPE WS2812B   // Typ des LED-Streifens

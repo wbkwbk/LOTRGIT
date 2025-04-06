@@ -12,14 +12,14 @@
             ],
             "intelliSenseMode": "gcc-x64",
             "includePath": [
-                "C:\\Users\\wbk\\AppData\\Local\\Arduino15\\packages\\arduino\\hardware\\renesas_uno\\1.3.2\\cores\\arduino\\tinyusb",
-                "C:\\Users\\wbk\\AppData\\Local\\Arduino15\\packages\\arduino\\hardware\\renesas_uno\\1.3.2\\cores\\arduino\\api\\deprecated",
-                "C:\\Users\\wbk\\AppData\\Local\\Arduino15\\packages\\arduino\\hardware\\renesas_uno\\1.3.2\\cores\\arduino\\api\\deprecated-avr-comp",
-                "C:\\Users\\wbk\\AppData\\Local\\Arduino15\\packages\\arduino\\hardware\\renesas_uno\\1.3.2\\cores\\arduino",
-                "C:\\Users\\wbk\\AppData\\Local\\Arduino15\\packages\\arduino\\hardware\\renesas_uno\\1.3.2\\variants\\MINIMA",
+                "C:\\Users\\wbk\\AppData\\Local\\Arduino15\\packages\\arduino\\hardware\\renesas_uno\\1.4.1\\cores\\arduino\\tinyusb",
+                "C:\\Users\\wbk\\AppData\\Local\\Arduino15\\packages\\arduino\\hardware\\renesas_uno\\1.4.1\\cores\\arduino\\api\\deprecated",
+                "C:\\Users\\wbk\\AppData\\Local\\Arduino15\\packages\\arduino\\hardware\\renesas_uno\\1.4.1\\cores\\arduino\\api\\deprecated-avr-comp",
+                "C:\\Users\\wbk\\AppData\\Local\\Arduino15\\packages\\arduino\\hardware\\renesas_uno\\1.4.1\\cores\\arduino",
+                "C:\\Users\\wbk\\AppData\\Local\\Arduino15\\packages\\arduino\\hardware\\renesas_uno\\1.4.1\\variants\\MINIMA",
                 "C:\\Users\\wbk\\Documents\\Arduino\\libraries\\WS2812FX\\src",
                 "C:\\Users\\wbk\\Documents\\Arduino\\libraries\\Adafruit_NeoPixel",
-                "C:\\Users\\wbk\\AppData\\Local\\Arduino15\\packages\\arduino\\hardware\\renesas_uno\\1.3.2\\libraries\\SoftwareSerial\\src",
+                "C:\\Users\\wbk\\AppData\\Local\\Arduino15\\packages\\arduino\\hardware\\renesas_uno\\1.4.1\\libraries\\SoftwareSerial\\src",
                 "c:\\users\\wbk\\appdata\\local\\arduino15\\packages\\arduino\\tools\\arm-none-eabi-gcc\\7-2017q4\\arm-none-eabi\\include\\c++\\7.2.1",
                 "c:\\users\\wbk\\appdata\\local\\arduino15\\packages\\arduino\\tools\\arm-none-eabi-gcc\\7-2017q4\\arm-none-eabi\\include\\c++\\7.2.1\\arm-none-eabi",
                 "c:\\users\\wbk\\appdata\\local\\arduino15\\packages\\arduino\\tools\\arm-none-eabi-gcc\\7-2017q4\\arm-none-eabi\\include\\c++\\7.2.1\\backward",
@@ -28,7 +28,7 @@
                 "c:\\users\\wbk\\appdata\\local\\arduino15\\packages\\arduino\\tools\\arm-none-eabi-gcc\\7-2017q4\\arm-none-eabi\\include"
             ],
             "forcedInclude": [
-                "C:\\Users\\wbk\\AppData\\Local\\Arduino15\\packages\\arduino\\hardware\\renesas_uno\\1.3.2\\cores\\arduino\\Arduino.h"
+                "C:\\Users\\wbk\\AppData\\Local\\Arduino15\\packages\\arduino\\hardware\\renesas_uno\\1.4.1\\cores\\arduino\\Arduino.h"
             ],
             "cStandard": "c11",
             "cppStandard": "c++17",
